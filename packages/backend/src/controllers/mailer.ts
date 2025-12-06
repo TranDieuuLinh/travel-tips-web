@@ -1,7 +1,7 @@
 import { config } from 'dotenv';
 config({ quiet: true });
 import nodemailer from 'nodemailer';
-import { addTokenDB, generateMagicLink } from './database/TokenService.ts';
+import { addTokenDB, generateMagicLink } from '../database/TokenService.ts';
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
