@@ -21,7 +21,10 @@
     "pg-hstore": "^2.3.4"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.10.1",
     "@types/cookie-parser": "^1.4.10",
-    "@types/nodemailer": "^7.0.4"
+    "@types/nodemailer": "^7.0.4",
+    "@types/pg": "^8.15.6"
   }
 }

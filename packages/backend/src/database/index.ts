@@ -8,7 +8,7 @@ export const pool = new Pool({
     host: 'localhost',
     database: 'gfgbackend',
     password: process.env.DB_PASS,
-    port: process.env.DB_PORT
+    port: Number(process.env.DB_PORT)
 });
 
 pool.on('connect',() =>{

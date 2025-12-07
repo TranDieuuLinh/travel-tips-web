@@ -7,6 +7,7 @@ import { pool } from '../database/index.ts';
 
 const router = express.Router();
 
+//verify magic link and cookie
 router.get('/verify', async (req, res) => {
     const MAXTOKENLENGTH = 132
     if (typeof (req.query.token) !== 'string' || req.query.token.length > MAXTOKENLENGTH) return res.status(404).json({ message: 'invalid URL' });
