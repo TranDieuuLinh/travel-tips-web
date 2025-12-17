@@ -2,6 +2,8 @@ import { config } from 'dotenv';
 config({ quiet: true });
 import crypto from 'crypto';
 import { pool } from './index.ts';
+import cron from 'node-cron';
+
 
 export function generateMagicLink() {
   const token = crypto.randomBytes(32).toString('base64');
@@ -16,6 +18,18 @@ export async function getTokenExpiryByURI(decodedURI: string) {
   const tokenExpiry = tokenExpiryTimeDB.rows[0].token_ended_time;
   return tokenExpiry;
 }
+
+export async function delTokenWeekly() {
+  try {
+    await pool.query(`DELETE FROM token WHERE token_ended_time < NOW() - INTERVAL '1 week'`);
+  } catch (error) {
+    console.error('Error deleting token weekly', error);
+  }
+}
+
+cron.schedule('0 2 * * 2', () => {
+  delTokenWeekly().catch(console.error);
+});
 
 
 export async function addTokenDB(mail: string, token: string) {
