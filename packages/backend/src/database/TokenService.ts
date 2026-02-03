@@ -36,9 +36,13 @@ export async function addTokenDB(mail: string, token: string) {
   try {
     const tokenCreatedTime = Date.now();
     const tokenEndedTime = tokenCreatedTime + (1500 * 60 * 1000);
+   
     const userId = await pool.query(`SELECT user_id FROM users WHERE user_email = $1`, [mail]);
     const numberUserId = Number(userId.rows[0].user_id)
 
+    const tokenExisted = await pool.query(`SELECT * FROM token WHERE user_id = $1`, [numberUserId]);
+    if (tokenExisted.rows.length > 0) await pool.query(`DELETE FROM token WHERE user_id = $1`, [numberUserId]);
+    
     await pool.query(`INSERT INTO token (token_id, token_created_time, token_ended_time,user_id ) VALUES ($1,$2,$3,$4) RETURNING *`, [token, tokenCreatedTime, tokenEndedTime, numberUserId]);
   } catch (error) {
     console.error(error);

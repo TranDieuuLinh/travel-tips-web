@@ -14,3 +14,20 @@ export function validateHashcookie(parsedCombined: string, hashedCombined: strin
   if (buffParsedCombined.length !== buffCombined.length) return false;
   return crypto.timingSafeEqual(buffParsedCombined, buffCombined);
 }
+
+export function validateUsersCookie(cookie:string, userIdURI?:string){
+  if (!cookie) return null;
+  let parsed;
+    try {
+        parsed = JSON.parse(cookie);
+    } catch (error: unknown) {
+        return null;
+    }
+    const { userId, cookieCreatedTime, combine } = parsed;
+    if (!cookieCreatedTime || !combine) return null;
+  
+    const hashedCombined = hashCookie(userIdURI? userIdURI : userId, cookieCreatedTime);
+
+    if (!validateHashcookie(combine, hashedCombined)) return null;
+    return parsed;
+}

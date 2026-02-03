@@ -6,7 +6,7 @@ import {Pool} from 'pg';
 export const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
-    database: 'gfgbackend',
+    database: 'travel_tips_web',
     password: process.env.DB_PASS,
     port: Number(process.env.DB_PORT)
 });

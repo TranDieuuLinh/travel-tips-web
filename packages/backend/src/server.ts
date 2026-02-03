@@ -4,11 +4,31 @@ import express from 'express';
 import { pool } from './database/index.ts';
 import cookieParser from 'cookie-parser';
 import auth from './routes/auth.ts';
+import login from './routes/login.ts';
 import Stripe from 'stripe';
+import cors from 'cors';
+
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+
+
 app.use(cookieParser());
+
+const allowedOrigins = ['http://localhost:3001','http://localhost:3000'];
+app.use(cors({
+  // origin: function(origin,callback){
+
+  //   if(!origin) return callback(null,true);
+
+  //   if(allowedOrigins.includes(origin)) return callback(null,true);
+  //   else return callback( new Error('Not allowed by CORS'));
+  // }, 
+  origin: 'http://localhost:3001',
+  methods:['GET','POST'],
+  credentials:true,
+}))
+
 
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature']!;
@@ -101,9 +121,8 @@ app.get(`/complete`, async (req, res) => {
 // Auth routes
 app.use(`/auth`, auth);
 
-app.get(`/dashboard`, async (req, res) => {
-  return res.send('hello');
-});
+//me routes
+app.use(`/login`,login);
 
 
 //testing purpose to read db
@@ -117,6 +136,13 @@ app.get(`/users`, async (req, res) => {
   res.status(200).json({ "user": userTable, "token": tokenTable, "paid": paidTable });
 });
 
+//logout user by clearing cookie
+app.post('/logout',(req,res) => {
+  res.clearCookie('information', { httpOnly: true, sameSite: 'lax',path: '/' });
+  res.status(200).json({ message: "Logged out" });
+});
+
+
 app.listen(process.env.PORT, () => {
-  console.log(`Example app listening on port ${process.env.PORT}`)
+  console.log(`Example app listening on port ${process.env.APP_URL}`)
 })

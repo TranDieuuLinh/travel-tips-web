@@ -23,6 +23,9 @@
   },
   "homepage": "https://github.com/TranDieuuLinh/travel-tips-web#readme",
   "dependencies": {
+    "@sanity/client": "^7.14.1",
+    "@sanity/types": "^5.7.0",
+    "again": "^0.0.1",
     "dotenv": "^17.2.3",
     "typescript": "^5.9.3"
   },

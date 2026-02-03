@@ -1,5 +1,5 @@
 import express from 'express';
-import { hashCookie, validateHashcookie } from '../controllers/cookie.ts';
+import { hashCookie, validateUsersCookie } from '../controllers/cookie.ts';
 import { getTokenExpiryByURI } from '../database/TokenService.ts';
 import { getUserIdByURI } from '../database/UserService.ts';
 import { sendMail } from '../controllers/mailer.ts';
@@ -20,7 +20,9 @@ router.get('/verify', async (req, res) => {
     const userId = await getUserIdByURI(decodedURI);
     if (!userId) return res.status(401).json({ message: 'Link Invalidated!' });
 
-    if (!req.cookies?.information) {
+    const parsedCookie = validateUsersCookie(req.cookies?.information, userId);
+
+    if (!parsedCookie) {
         const cookieCreatedTime = Date.now();
         const hashedCombined = hashCookie(userId, cookieCreatedTime);
 
@@ -29,25 +31,13 @@ router.get('/verify', async (req, res) => {
             cookieCreatedTime: cookieCreatedTime,
             combine: hashedCombined
         }
-        res.cookie('information', JSON.stringify(cookieInformation), { maxAge: 360000, httpOnly: true, });
-        return res.status(200).redirect(`/dashboard`);
+        res.cookie('information', JSON.stringify(cookieInformation), { maxAge: 3600, httpOnly: true, sameSite:'lax' });
     }
 
-    let parsed;
-    try {
-        parsed = JSON.parse(req.cookies.information);
-    } catch (error: unknown) {
-        return res.json({ message: 'Invalid cookie format' });
-    }
-    const parsedCookieCreatedTime = parsed.cookieCreatedTime;
-    const parsedCombined = parsed.combine;
-    if (!parsedCookieCreatedTime || !parsedCombined) return res.json({ message: 'Invalid cookie' });
-
-    const hashedCombined = hashCookie(userId, parsedCookieCreatedTime);
-
-    if (!validateHashcookie(parsedCombined,hashedCombined)) return res.json({ message: 'Invalid cookie' });
-    return res.status(200).redirect(`/dashboard`);
+    return res.status(200).redirect(`${process.env.FRONTEND_URL}/countries`);
 });
+
+
 
 
 //send email to user with magic link
@@ -57,14 +47,13 @@ router.post('/mail', async (req, res) => {
 
   try {
     const userExist = await pool.query(`SELECT * FROM users WHERE user_email = $1`, [email]);
-    if (!userExist) await pool.query(`INSERT INTO users (user_email, user_name) VALUES($1, $2) RETURNING *`, [email, "Anonymous"]);
-
+    if (userExist.rows.length === 0) await pool.query(`INSERT INTO users (user_email, user_name) VALUES($1, $2) RETURNING *`, [email, "Anonymous"]);
     await sendMail(email);
     return res.status(200).json({ 'message': "email sent!" });
-
+    
   } catch (error: unknown) {
     console.error(error);
-    return res.status(500).json({ 'message': 'Internall Server Error' });
+    return res.status(500).json({ 'message': 'Internal Server Error' });
   }
 });
 
