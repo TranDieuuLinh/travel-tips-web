@@ -1,17 +1,15 @@
- import Hero from './home/sections/Hero.tsx'
- import Who from './home/sections/Who.tsx';
- import Highlight from './home/sections/Highlight.tsx';
+import Hero from "./home/Hero.tsx";
+import Who from "./home/Who.tsx";
+import Highlight from "./home/Highlight.tsx";
 
 export default function page() {
-
-
   return (
-   <div>
-    <Hero/>
-    <hr/>
-    <Who/>
-    <hr/>
-    <Highlight/>
-   </div>
+    <div>
+      <Hero />
+      <hr />
+      <Who />
+      <hr />
+      <Highlight />
+    </div>
   );
 }

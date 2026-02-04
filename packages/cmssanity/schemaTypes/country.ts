@@ -9,6 +9,16 @@ export const country = defineType({
             name:'countryName',
             title: 'Country Name',
             type:'string'
-        })
+        }),
+        defineField({
+            name:'imageCover',
+            title:'Image Cover',
+            type:'image'
+        }),
+        defineField({
+            name:'slug',
+            title:'slug',
+            type:'slug'
+        }),
     ]
 })

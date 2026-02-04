@@ -17,12 +17,22 @@ export const post = defineType({
             type:'string'
         }), 
         defineField({
+            name: 'freeContent',
+            title: 'Free Content',
+            type: 'array',
+            of: [{ type: 'block' }, { type: 'image', options:{hotspot:true}}],
+          }),
+        defineField({
             name: 'content',
             title: 'Content',
             type:'array',
-            of: [{type:'block'},
-                {type:'image'}
-            ]
+            of: [{type:'block'}, {type:'image', options:{hotspot:true}}]
+        }),
+        defineField({
+          name: 'highlightImage',
+          title: 'Highlight Image',
+          type: 'image',
+          options: { hotspot: true, },
         }),
         defineField({
             name:'slug',
@@ -35,3 +45,10 @@ export const post = defineType({
         })
     ]
 })
+
+
+
+
+
+
+

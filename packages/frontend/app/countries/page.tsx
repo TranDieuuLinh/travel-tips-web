@@ -1,7 +1,12 @@
-import React from 'react';
+import React from "react";
+import CountriesBox from "./countriesBox";
 
 const Page = () => {
-  return <div>Countries Page</div>; 
+  return (
+    <div>
+      <CountriesBox />
+    </div>
+  );
 };
 
 export default Page;
