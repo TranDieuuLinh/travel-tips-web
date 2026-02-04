@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "./Image/Logo.png";
@@ -9,13 +9,55 @@ import { usePathname } from "next/navigation";
 const Navbar = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [openEditName, setOpenEditName] = useState(false);
+  const [dropdownMenu, setdropdownMenu] = useState(false);
+  const [newName, setNewName] = useState("");
+  const dropdownMenuRef = React.useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
 
-  useEffect(() => {
-    console.log("Navbar mounted");
+  const fetchEditName = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:3000/login/update-name`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          newName: newName,
+          email: email,
+        }),
+      });
 
+      if (response.status === 200) {
+        setName(newName);
+        setNewName("");
+        setdropdownMenu(false);
+      } else alert("Fail to edit name");
+    } catch (error) {
+      console.error(error);
+      alert("Fail to edit name");
+    }
+  };
+
+  const clickOutside = (e: MouseEvent) => {
+    if (
+      dropdownMenuRef.current &&
+      !dropdownMenuRef.current.contains(e.target as Node)
+    ) {
+      setdropdownMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("click", clickOutside);
+
+    return () => {
+      window.removeEventListener("click", clickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await fetch("http://localhost:3000/login/me", {
@@ -23,50 +65,101 @@ const Navbar = () => {
           credentials: "include",
         });
 
-        if (!response.ok) {
-          return;
-        }
+        if (!response.ok) return;
 
         const data = await response.json();
 
-        if (!data.name || !data.email) {
-          return;
-        }
+        if (!data.name || !data.email) return;
 
-        setName(data.name);
+        setName(data.name.trim());
         setEmail(data.email);
       } catch (error) {
         console.error("Fetch threw error:", error);
       }
     };
-
     fetchUserData();
   }, []);
 
-  const navLinks = [
-    { name: "HOME", path: "/" },
-    { name: "COUNTRIES", path: "/countries" },
-    { name: name ? `HEY, ${name}` : "SIGNIN", path: name ? "#" : "/signin" },
-    { name: name ? "LOGOUT" : "", path: name ? "/logout" : "" },
-  ];
-
   return (
-    <nav className="justify-between items-center top-0 absolute z-5 w-full flex px-7 py-4 bg-linear-to-b from-black/50 to-black/0 text-white font-semibold font-sans text-sm">
+    <nav className="justify-between items-center top-0 absolute z-5 w-full flex px-7 py-4 bg-linear-to-b from-black/50 to-black/0 text-white font-semibold font-sans text-sm ">
       <div className="flex items-center space-x-2">
         <Image src={Logo} alt="Logo Image" width={33} />
         <Link href="/">TRAVEL WITH KNOWLEDGE</Link>
       </div>
 
-      <div className="flex space-x-4">
-        {navLinks.map((link) => (
-          <Link
-            href={link.path}
-            key={link.name}
-            className={isActive(link.path) ? "text-neutral-300" : ""}
-          >
-            {link.name}
+      <div className="flex space-x-4 ">
+        <div className="hover:text-orange-50">
+          <Link href="/" className={isActive("/") ? "text-neutral-300" : ""}>
+            HOME
           </Link>
-        ))}
+        </div>
+        <div className="hover:text-orange-50">
+          <Link
+            href="/countries"
+            className={isActive("/countries") ? "text-neutral-300" : ""}
+          >
+            COUNTRIES
+          </Link>
+        </div>
+        {name ? (
+          <div ref={dropdownMenuRef} className="w-fit relative">
+            <button
+              onClick={() => {
+                setdropdownMenu(!dropdownMenu);
+                setOpenEditName(false);
+              }}
+              className="inline-flex hover:text-orange-50 cursor-pointer"
+            >
+              HEY, {name.trim().toUpperCase()} ▼
+            </button>
+            {dropdownMenu && (
+              <div className="mt-4 absolute bg-neutral-200 rounded  p-3 w-24 end-0 flex flex-col space-y-4 text-sm">
+                <div
+                  className="text-gray-500 "
+                  onClick={() => setOpenEditName(true)}
+                >
+                  <div className="underline cursor-pointer">
+                    {openEditName && (
+                      <div className="flex flex-col justify-center ">
+                        <form onSubmit={fetchEditName}>
+                          <input
+                            required
+                            value={newName}
+                            onChange={(e) => setNewName(e.target.value)}
+                            placeholder={"New name..."}
+                            type="text"
+                            className="w-full border p-1"
+                          ></input>
+                          <button
+                            type="submit"
+                            className="w-fit mt-1  text-black px-1"
+                          >
+                            Edit
+                          </button>
+                        </form>
+                      </div>
+                    )}
+                    {!openEditName && "Edit Name"}
+                  </div>
+                </div>
+                <Link
+                  className="text-red-400 underline"
+                  href="/logout"
+                  onClick={() => setdropdownMenu(false)}
+                >
+                  Log Out
+                </Link>
+              </div>
+            )}
+          </div>
+        ) : (
+          <Link
+            href="/signin"
+            className={isActive("/signin") ? "text-neutral-300" : ""}
+          >
+            SIGNIN
+          </Link>
+        )}
       </div>
     </nav>
   );

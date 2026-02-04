@@ -31,7 +31,7 @@ router.get('/verify', async (req, res) => {
             cookieCreatedTime: cookieCreatedTime,
             combine: hashedCombined
         }
-        res.cookie('information', JSON.stringify(cookieInformation), { maxAge: 3600, httpOnly: true, sameSite:'lax' });
+        res.cookie('information', JSON.stringify(cookieInformation), { maxAge: 36000000, httpOnly: true, sameSite:'lax' });
     }
 
     return res.status(200).redirect(`${process.env.FRONTEND_URL}/countries`);

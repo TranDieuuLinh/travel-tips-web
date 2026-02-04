@@ -1,24 +1,24 @@
 import Image from "next/image";
 import SignInBg from "../Image/SignInBg.png";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import isEmail from "validator/lib/isEmail";
 
 const SignInBox = () => {
-  const [data, setData] = useState(0);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (!isEmail(email)) {
       alert("Please enter a valid email address.");
-      return window.location.reload();
+      return;
     }
 
     try {
       setLoading(true);
-      e.preventDefault();
       const response = await fetch("http://localhost:3000/auth/mail", {
         method: "POST",
         headers: {
@@ -28,24 +28,16 @@ const SignInBox = () => {
           email: email,
         }),
       });
-      setLoading(false);
-      setData(response.status);
+
+      if (response.status === 200) router.push("/signin/sent");
+      else alert("Error sending email. Please try again.");
     } catch (error) {
       console.error("Error fetching data:", error);
-      setData(500);
+      alert("Error sending email. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (data === 200) {
-      router.push("/signin/sent");
-    } else if (data === 0) {
-      return;
-    } else {
-      alert("Error sending email. Please try again.");
-      window.location.reload();
-    }
-  }, [data, router]);
 
   return (
     <div className="relative h-screen w-screen bg-[#7C7C7C] flex items-center justify-center">

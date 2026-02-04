@@ -126,15 +126,15 @@ app.use(`/login`,login);
 
 
 //testing purpose to read db
-app.get(`/users`, async (req, res) => {
-  const user = await pool.query(`SELECT * from users`);
-  const token = await pool.query(`SELECT * from token`);
-  const paid = await pool.query(`SELECT * from paid_country`);
-  const userTable = user.rows;
-  const tokenTable = token.rows;
-  const paidTable = paid.rows;
-  res.status(200).json({ "user": userTable, "token": tokenTable, "paid": paidTable });
-});
+// app.get(`/users`, async (req, res) => {
+//   const user = await pool.query(`SELECT * from users`);
+//   const token = await pool.query(`SELECT * from token`);
+//   const paid = await pool.query(`SELECT * from paid_country`);
+//   const userTable = user.rows;
+//   const tokenTable = token.rows;
+//   const paidTable = paid.rows;
+//   res.status(200).json({ "user": userTable, "token": tokenTable, "paid": paidTable });
+// });
 
 //logout user by clearing cookie
 app.post('/logout',(req,res) => {

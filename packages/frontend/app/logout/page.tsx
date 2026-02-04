@@ -19,7 +19,7 @@ const Page = () => {
       }
     };
     logoutUser();
-  }, []);
+  }, [router]);
 
   return <div>logout page</div>;
 };
