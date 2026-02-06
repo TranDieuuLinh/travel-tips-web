@@ -1,4 +1,3 @@
-import React from 'react'
 import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 import { sanityClient } from "./client";
 

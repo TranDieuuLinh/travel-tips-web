@@ -1,6 +1,5 @@
 import React from "react";
-import CountriesBox from "./countriesBox";
-
+import CountriesBox from "./CountriesBox";
 const Page = () => {
   return (
     <div>

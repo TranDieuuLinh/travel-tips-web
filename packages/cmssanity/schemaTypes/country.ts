@@ -18,7 +18,16 @@ export const country = defineType({
         defineField({
             name:'slug',
             title:'slug',
-            type:'slug'
+            type:'slug',
+            options:{
+                source:'countryName',
+                maxLength:96
+            }
         }),
+        defineField({
+            name:'highlight',
+            title:'Highlight',
+            type:'boolean'
+        })
     ]
 })
