@@ -101,6 +101,14 @@ const Navbar = () => {
             COUNTRIES
           </Link>
         </div>
+        <div className="hover:text-orange-50">
+          <Link
+            href="/purchase"
+            className={isActive("/purchase") ? "text-neutral-300" : ""}
+          >
+            PURCHASE
+          </Link>
+        </div>
         {name ? (
           <div ref={dropdownMenuRef} className="w-fit relative">
             <button

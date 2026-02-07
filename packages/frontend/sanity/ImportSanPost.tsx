@@ -64,7 +64,7 @@ export const ImportSanPost = (slug?: string, countrySlug?:string) => {
       }
     };
     fetchPosts();
-  }, [slug]);
+  }, [slug, countrySlug]);
 
   return { post, loading };
 };

@@ -1,7 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
 import MainCountry from "./MainCountry";
-import { spec } from "node:test/reporters";
 
 const Page = () => {
   const { specifc } = useParams();

@@ -4,6 +4,7 @@ import { urlFor } from "@/sanity/urlFor";
 import Image from "next/image";
 import { PortableText } from "next-sanity";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 type Props = {
   slug: string;
 };
@@ -12,6 +13,9 @@ const MainCountry = ({ slug }: Props) => {
   const { post, loading } = ImportSanPost(slug.trim().toLowerCase());
   const fetchPost = post[0];
   const [paid, setpaid] = useState(false);
+  const router = useRouter();
+  const movetoPayment = () => { router.push('/purchase')};
+
   if (loading) return <p>Loading... </p>;
 
   return (
@@ -42,7 +46,7 @@ const MainCountry = ({ slug }: Props) => {
       {!paid && (
             <div className="flex-col justify-between items-center bottom-0  space-y-5 w-full flex  py-18 bg-linear-to-b from-black/0 to-black/50 font-extrabold font-sans text-3xl">
               <p>Experience more for only $2!</p>
-              <button className="bg-[#6D2608] px-20 py-2 text-sm text-white">DISCOVER</button>
+              <button className="bg-[#6D2608] px-20 py-2 text-sm text-white" onClick={movetoPayment}>DISCOVER</button>
             </div>
           )}
     </>
