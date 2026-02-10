@@ -3,13 +3,16 @@ import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 import type { UserConfig as ViteConfig } from 'vite'
+import { config } from 'dotenv';
+config({ quiet: true });
+
 
 export default defineConfig({
   name: 'default',
   title: 'CMSSanity',
 
-  projectId: '3b2dc5to',
-  dataset: 'production',
+  projectId: process.env.PROJECTID!,
+  dataset: process.env.DATASET!,
 
   plugins: [structureTool(), visionTool()],
 

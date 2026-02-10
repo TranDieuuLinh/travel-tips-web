@@ -1,9 +1,11 @@
 import {defineCliConfig} from 'sanity/cli'
+import { config } from 'dotenv';
+config({ quiet: true });
 
 export default defineCliConfig({
   api: {
-    projectId: '3b2dc5to',
-    dataset: 'production'
+    projectId: process.env.PROJECTID!,
+    dataset: process.env.DATASET!,
   },
   deployment: {
     /**
