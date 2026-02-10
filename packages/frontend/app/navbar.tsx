@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "./Image/Logo.png";
 import { usePathname } from "next/navigation";
 
 const Navbar = () => {
@@ -81,17 +80,29 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="justify-between items-center top-0 absolute z-5 w-full flex px-7 py-4 bg-linear-to-b from-black/50 to-black/0 text-white font-semibold font-sans text-sm ">
-      <div className="flex items-center space-x-2">
-        <Image src={Logo} alt="Logo Image" width={33} />
-        <Link href="/">TRAVEL WITH KNOWLEDGE</Link>
+    <nav className="justify-between items-center top-0 absolute z-5 w-full flex px-3 sm:px-7 py-4 bg-linear-to-b from-black/50 to-black/0 text-white font-semibold font-sans text-[8px] sm:text-[12px] md:text-sm lg:text-[16px]">
+      <div className="flex items-center lg:space-x-1">
+        <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-9 md:h-9 lg:w-12 lg:h-12 relative">
+          <Image
+            src="/icon.png"
+            alt="Logo Image"
+            fill
+            className="object-contain"
+          />
+        </div>
+        {!name && <Link href="/">TRAVEL WITH KNOWLEDGE</Link>}
+        {name && <div className="hover:text-orange-50">
+        {name &&  <Link href="/" className={isActive("/") ? "text-neutral-300" : ""}>
+        TRAVEL WITH KNOWLEDGE
+          </Link>}
+        </div>}
       </div>
 
-      <div className="flex space-x-4 ">
+      <div className="flex md:space-x-4 space-x-1">
         <div className="hover:text-orange-50">
-          <Link href="/" className={isActive("/") ? "text-neutral-300" : ""}>
+        {!name &&  <Link href="/" className={isActive("/") ? "text-neutral-300" : ""}>
             HOME
-          </Link>
+          </Link>}
         </div>
         <div className="hover:text-orange-50">
           <Link
@@ -118,10 +129,10 @@ const Navbar = () => {
               }}
               className="inline-flex hover:text-orange-50 cursor-pointer"
             >
-              HEY, {name.trim().toUpperCase()} ▼
+             {name.trim().toUpperCase()} ▼
             </button>
             {dropdownMenu && (
-              <div className="mt-4 absolute bg-neutral-200 rounded  p-3 w-24 end-0 flex flex-col space-y-4 text-sm">
+              <div className="sm:mt-4 absolute bg-neutral-200 rounded p-1 sm:p-3 sm:w-24 w-16 end-0 flex flex-col md:space-y-4 space-y-2 text-[9px] sm:text-sm">
                 <div
                   className="text-gray-500 "
                   onClick={() => setOpenEditName(true)}
@@ -136,11 +147,11 @@ const Navbar = () => {
                             onChange={(e) => setNewName(e.target.value)}
                             placeholder={"New name..."}
                             type="text"
-                            className="w-full border p-1"
+                            className="w-full border p-0.5 sm:p-1  text-[8px]"
                           ></input>
                           <button
                             type="submit"
-                            className="w-fit mt-1  text-black px-1"
+                            className="w-fit mt-1  text-black md:px-1"
                           >
                             Edit
                           </button>

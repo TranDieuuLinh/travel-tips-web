@@ -13,12 +13,12 @@ router.get('/me', async (req, res) => {
 
     try {
         const userId = parsed.userId;
-        const result = await pool.query(`SELECT user_email, user_name FROM users WHERE user_id = $1`, [userId]);
+        const result = await pool.query(`SELECT * FROM users WHERE user_id = $1`, [userId]);
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
         const user = result.rows[0];
-        return res.status(200).json({ email: user.user_email, name: user.user_name });
+        return res.status(200).json({ email: user.user_email, name: user.user_name, id:user.user_id });
 
     } catch (error:unknown) {
         return res.status(401).json({ message: 'Unauthorized' });

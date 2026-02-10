@@ -1,30 +1,21 @@
-"use client";
 import { SanityImageSource } from "@sanity/image-url";
 import { sanityClient } from "./client";
-import { useState, useEffect } from "react";
 import { PortableTextBlock } from "next-sanity";
 
-type Post = {
+export type Post = {
   postTitle: string;
   slug: string;
-  content:PortableTextBlock[];
+  content: PortableTextBlock[];
   freeContent: PortableTextBlock[];
   highlightImage: SanityImageSource;
   previewContent: PortableTextBlock[];
 };
 
-export const ImportSanPost = (slug?: string, countrySlug?:string) => {
-  const [post, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        let params = {};
-        let query;
-        if (slug) {
-          query = `*[_type == "post" && slug.current == $slug]{
+export async function ImportSanPost(slug?: string, countrySlug?: string) {
+  let params = {};
+  let query;
+  if (slug) {
+    query = `*[_type == "post" && slug.current == $slug]{
             postTitle,
             freeContent,
             content,
@@ -32,9 +23,9 @@ export const ImportSanPost = (slug?: string, countrySlug?:string) => {
             highlightImage,
             previewContent
           }`;
-          params = { slug };
-        } else if (countrySlug) {
-          query = `*[_type == "post" && countryName->slug.current == $country]{
+    params = { slug };
+  } else if (countrySlug) {
+    query = `*[_type == "post" && countryName->slug.current == $country]{
             postTitle,
             freeContent,
             content,
@@ -43,10 +34,9 @@ export const ImportSanPost = (slug?: string, countrySlug?:string) => {
             previewContent
           }`;
 
-          params = { country: countrySlug };
-        }
-        else {
-          query = `*[_type == "post"]{
+    params = { country: countrySlug };
+  } else {
+    query = `*[_type == "post"]{
             postTitle,
             freeContent,
             content,
@@ -54,17 +44,6 @@ export const ImportSanPost = (slug?: string, countrySlug?:string) => {
             highlightImage,
             previewContent
           }`;
-        }
-        const posts = await sanityClient.fetch<Post[]>(query, params);
-        setPosts(posts);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPosts();
-  }, [slug, countrySlug]);
-
-  return { post, loading };
-};
+  }
+  return await sanityClient.fetch<Post[]>(query, params);
+}

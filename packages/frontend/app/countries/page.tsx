@@ -1,9 +1,14 @@
-import React from "react";
 import CountriesBox from "./CountriesBox";
-const Page = () => {
+import { ImportSanCountry } from "@/sanity/ImportSanCountry";
+
+export const revalidate = 60; 
+
+const Page = async () => {
+
+  const countries = await ImportSanCountry();
   return (
     <div>
-      <CountriesBox />
+      <CountriesBox countries={countries}/>
     </div>
   );
 };

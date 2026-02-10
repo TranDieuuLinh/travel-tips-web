@@ -1,12 +1,20 @@
-"use client";
-import { useParams } from "next/navigation";
+import { ImportSanPost } from "@/sanity/ImportSanPost";
 import MainCountry from "./MainCountry";
 
-const Page = () => {
-  const { specifc } = useParams();
+type Props = {
+  params: {
+    slug: string;
+    specifc: string;
+  };
+};
+export const revalidate = 60;
+
+const Page = async ({ params }: Props) => {
+  const { slug, specifc } = await params;
+  const posts = await ImportSanPost(specifc.trim().toLowerCase());
   return (
     <div>
-      <MainCountry slug={specifc as string} />
+      <MainCountry countrySlug={slug as string} posts={posts} />
     </div>
   );
 };

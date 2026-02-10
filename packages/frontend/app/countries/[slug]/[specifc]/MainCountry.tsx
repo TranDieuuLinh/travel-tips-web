@@ -1,54 +1,93 @@
 "use client";
-import { ImportSanPost } from "@/sanity/ImportSanPost";
+import { Post } from "@/sanity/ImportSanPost";
 import { urlFor } from "@/sanity/urlFor";
 import Image from "next/image";
 import { PortableText } from "next-sanity";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 type Props = {
-  slug: string;
+  countrySlug: string;
+  posts: Post[];
 };
 
-const MainCountry = ({ slug }: Props) => {
-  const { post, loading } = ImportSanPost(slug.trim().toLowerCase());
-  const fetchPost = post[0];
+const MainCountry = ({ countrySlug, posts }: Props) => {
+  const fetchPost = posts[0];
   const [paid, setpaid] = useState(false);
   const router = useRouter();
-  const movetoPayment = () => { router.push('/purchase')};
+  const movetoPayment = () => {
+    router.push("/purchase");
+  };
 
-  if (loading) return <p>Loading... </p>;
+  useEffect(() => {
+    const checklogin = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/login/me`, {
+          method: "GET",
+          credentials: "include",
+        });
+        if (!response.ok) return;
+        const result = await response.json();
+        if (!result.id || !result.email) return;
+
+        const paidcountryRes = await fetch(
+          `http://localhost:3000/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
+        );
+        if (!paidcountryRes.ok) return;
+        const paidcountrydata = await paidcountryRes.json();
+        const paidcountries = paidcountrydata.paidcountries;
+        if (paidcountries.includes(countrySlug)) return setpaid(true);
+        else return setpaid(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    checklogin();
+  }, [countrySlug]);
 
   return (
     <>
-      {!loading && fetchPost && (
-        <div className="p-12 flex flex-col justify-center items-center ">
-          <div className=" pt-10">
+      {fetchPost && (
+        <div className="flex flex-col items-center px-4 sm:px-6 md:px-12 lg:px-20 py-18 sm:py-12 gap-6">
+          {/* Image */}
+          <div className=" max-w-50 md:max-w-130 lg:w-85">
             <Image
               src={urlFor(fetchPost.highlightImage).quality(100).url()}
-              alt={""}
-              width={300}
+              alt={fetchPost.postTitle}
+              width={500}
               height={400}
+              className="w-full h-auto rounded object-cover"
             />
           </div>
-          <h2 className="font-serif text-[#6D2608] font-bold text-3xl py-5">
-            {fetchPost && fetchPost.postTitle.toUpperCase()}
+
+          {/* Post Title */}
+          <h2 className="font-serif text-[#6D2608] font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center sm:py-5">
+            {fetchPost.postTitle.toUpperCase()}
           </h2>
-          <div className="font-sans tracking-normal">
-            <PortableText value={fetchPost.freeContent}></PortableText>
+
+          {/* Free Content */}
+          <div className="font-sans tracking-normal text-xs sm:text-base md:text-lg lg:text-xl text-left">
+            <PortableText value={fetchPost.freeContent} />
           </div>
+
+          {/* Paid Content */}
           {paid && (
-            <div className="font-sans tracking-normal">
-              <PortableText value={fetchPost.content}></PortableText>
+            <div className="font-sans tracking-normal text-xs sm:text-base md:text-lg lg:text-xl text-left pt-2">
+              <PortableText value={fetchPost.content} />
             </div>
           )}
         </div>
       )}
       {!paid && (
-            <div className="flex-col justify-between items-center bottom-0  space-y-5 w-full flex  py-18 bg-linear-to-b from-black/0 to-black/50 font-extrabold font-sans text-3xl">
-              <p>Experience more for only $2!</p>
-              <button className="bg-[#6D2608] px-20 py-2 text-sm text-white" onClick={movetoPayment}>DISCOVER</button>
-            </div>
-          )}
+        <div className="flex-col justify-between items-center bottom-0  space-y-5 w-full flex  py-18 bg-linear-to-b from-black/0 to-black/50 font-extrabold font-sans text-white text-lg sm:text-xl md:text-2xl">
+          <p>Experience more for only $2!</p>
+          <button
+            className="bg-[#6D2608] px-8 sm:px-16 py-2 sm:py-3 text-sm sm:text-base rounded-md hover:bg-[#6d2608c1]"
+            onClick={movetoPayment}
+          >
+            DISCOVER
+          </button>
+        </div>
+      )}
     </>
   );
 };

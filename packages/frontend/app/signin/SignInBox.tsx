@@ -1,5 +1,4 @@
 import Image from "next/image";
-import SignInBg from "../Image/SignInBg.png";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import isEmail from "validator/lib/isEmail";
@@ -42,14 +41,14 @@ const SignInBox = () => {
   return (
     <div className="relative h-screen w-screen bg-[#7C7C7C] flex items-center justify-center">
       <Image
-        src={SignInBg}
+        src="/SignInBg.png"
         alt="Sign In Background"
         fill
         className="absolute h-full w-full object-cover"
       />
-      <div className="flex-col absolute flex items-center justify-center font-sans font-light px-15 pt-15  space-y-6 bg-white rounded-2xl border-2 ">
-        <div className="space-y-0 text-center">
-          <p>We will send a link to authenticate </p>
+      <div className="flex-col absolute flex items-center justify-center font-sans font-light px-10 md:px-15 md:pt-15 pt-10 space-y-6 bg-white rounded-2xl border-2 ">
+        <div className="space-y-0 text-center text-xs sm:text-base">
+          <p >We will send a link to authenticate </p>
           <p> your account 📩</p>
         </div>
         <form className="flex flex-col space-y-6" onSubmit={handleSubmit}>
@@ -57,14 +56,14 @@ const SignInBox = () => {
             type="email"
             required
             placeholder="Enter your email..."
-            className="ps-6 pe-20 py-3 rounded-lg border bg-white "
+            className="md:ps-6 ps-4 pe-10 md:pe-20 py-2 md:py-3 rounded-lg border bg-white text-xs sm:text-base"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#6D2608] mx-12 py-2.5 mb-8 rounded-3xl text-white font-semibold hover:bg-black transition"
+            className="bg-[#6D2608] md:mx-12 py-2.5 mb-8 rounded-3xl text-xs sm:text-base text-white font-semibold hover:bg-black transition"
           >
             {loading ? "Sending..." : "Send Link"}
           </button>

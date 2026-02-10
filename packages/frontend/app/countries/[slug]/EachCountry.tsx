@@ -1,78 +1,89 @@
-import { ImportSanCountry } from "../../../sanity/ImportSanCountry";
+"use client";
+
+import { Country } from "../../../sanity/ImportSanCountry";
 import Image from "next/image";
 import { urlFor } from "@/sanity/urlFor";
-import { ImportSanPost } from "@/sanity/ImportSanPost";
+import { Post } from "@/sanity/ImportSanPost";
 import { PortableText } from "next-sanity";
 import Link from "next/link";
 
 type Props = {
   slug: string;
+  posts: Post[];
+  countries: Country[];
 };
 
-const EachCountry = ({ slug }: Props) => {
-  const { countries, loading } = ImportSanCountry(slug.trim().toLowerCase());
+const EachCountry = ({ countries, posts, slug }: Props) => {
   const countrySlug = slug;
-  const { post } = ImportSanPost(undefined, slug.trim().toLowerCase());
   const country = countries[0];
-  if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="px-20">
-      <div className="flex flex-wrap px-8 py-4 font-sans font-bold justify-center">
-        {!loading && country && (
-          <div
-            key={country.slug}
-            className="flex flex-col shrink-0 border-2"
-          >
-            <Image
-              src={urlFor(country.imageCover).quality(100).url()}
-              alt={country.countryName}
-              height={150}
-              width={180}
-              style={{ width: "160px", height: "100px" }}
-              className="object-cover"
-            />
-            <p className="text-center py-4">{country.countryName} section</p>
+    <div className="px-8 sm:px-10 md:px-12 lg:px-20">
+      <div className="flex flex-wrap justify-center gap-6 mb-8 font-sans font-bold">
+        {country && (
+          <div className="flex flex-col shrink-0 border-2 rounded-lg overflow-hidden w-37 sm:w-37.5 md:w-45 lg:w-50">
+            <div className="relative w-full h-25.5 md:h-28 lg:h-30">
+              <Image
+                src={urlFor(country.imageCover).quality(100).url()}
+                alt={country.countryName}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <p className="text-center py-2 sm:py-3 text-sm sm:text-base md:text-lg lg:text-xl">
+              {country.countryName} section
+            </p>
           </div>
         )}
       </div>
-      <div className=" flex-col  px-10 gap-4 font-sans border-2  text-xl py-4  ">
-        <div className="w-full justify-center flex font-extralight">
-          <p className="tracking-widest">POSTS OVERVIEW</p>
+
+      <div className="flex flex-col gap-6 sm:gap-8 font-sans border-2 rounded-lg px-4 sm:px-6 md:px-8 py-6">
+        <div className="w-full text-center">
+          <p className="tracking-widest text-sm sm:text-base md:text-lg font-extralight">
+            POSTS OVERVIEW
+          </p>
         </div>
         <hr />
-        {!post || post.length ===0 && <div className="text-center pt-4"> No posts available for this country yet</div>}
-        {post &&
-          post.map((p) => (
-            <div key={p.slug} className="w-full text-[16px]">
-              <div className="flex space-x-3 px-10 ">
-                <div className="justify-center h-full flex items-center">
+
+        {!posts || posts.length === 0 ? (
+          <div className="text-center text-sm sm:text-base">
+            No posts available for this country yet
+          </div>
+        ) : (
+          posts.map((p) => (
+            <div
+              key={p.slug}
+              className="w-full text-base sm:text-base md:text-lg"
+            >
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
+                {/* Post Image */}
+                <div className="shrink-0 w-full sm:w-22.5 md:w-30 h-30 relative">
                   <Image
                     src={urlFor(p.highlightImage).quality(100).url()}
                     alt={p.postTitle}
-                    width={150}
-                    height={100}
-                    style={{ width: "90px", height: "100px" }}
-                    className="object-cover"
+                    fill
+                    className="object-cover rounded"
                   />
                 </div>
 
-                <div className="flex-1 space-y-4">
+                {/* Post Text */}
+                <div className="flex-1 space-y-2">
                   <Link href={`/countries/${countrySlug}/${p.slug}`}>
-                    <h1 className="underline">{p.postTitle}</h1>
+                    <h1 className="underline text-sm sm:text-base md:text-lg lg:text-xl">
+                      {p.postTitle}
+                    </h1>
                   </Link>
 
-                  <div className="font-extralight tracking-wide">
+                  <div className="font-sans font-extralight text-[10px] sm:text-sm md:text-sm xl:text-lg md:leading-relaxed">
                     <PortableText value={p.previewContent} />
                   </div>
                 </div>
               </div>
-
-              <hr className="mt-4 w-full" />
+              <hr className="mt-6 w-full" />
             </div>
-          ))}
+          ))
+        )}
       </div>
-      <div></div>
     </div>
   );
 };

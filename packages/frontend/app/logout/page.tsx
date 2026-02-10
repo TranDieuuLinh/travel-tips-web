@@ -12,8 +12,7 @@ const Page = () => {
           method: "POST",
           credentials: "include",
         });
-        window.location.reload();
-        router.push("/");
+        window.location.href = "/";
       } catch (error) {
         console.error("Error during logout:", error);
       }

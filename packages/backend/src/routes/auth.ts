@@ -37,9 +37,6 @@ router.get('/verify', async (req, res) => {
     return res.status(200).redirect(`${process.env.FRONTEND_URL}/countries`);
 });
 
-
-
-
 //send email to user with magic link
 router.post('/mail', async (req, res) => {
   const { email } = req.body;

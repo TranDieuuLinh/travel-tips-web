@@ -1,24 +1,15 @@
-"use client";
-
 import { SanityImageSource } from "@sanity/image-url";
 import { sanityClient } from "./client";
-import { useState, useEffect } from "react";
 
-type Country = {
+export type Country = {
   countryName: string;
   imageCover: SanityImageSource;
   slug: string;
   highlight: boolean;
 };
 
-export const ImportSanCountry = (slug?: string) => {
-  const [countries, setCountries] = useState<Country[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        setLoading(true);
+export async function ImportSanCountry (slug?: string) {
+  
         let params = {};
         let query;
         if (slug) {
@@ -38,16 +29,6 @@ export const ImportSanCountry = (slug?: string) => {
             highlight
           }`;
         }
-        const countries = await sanityClient.fetch<Country[]>(query,params);
-        setCountries(countries);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCountries();
-  }, [slug]);
-
-  return { countries, loading };
+        return await sanityClient.fetch<Country[]>(query,params);
+  
 };

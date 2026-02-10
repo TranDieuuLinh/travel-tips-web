@@ -1,84 +1,65 @@
 "use client";
-import heroPicture from "../Image/Hero.png";
 import { useRouter } from "next/navigation";
-import { SanityImageSource } from "@sanity/image-url";
-import { sanityClient } from "../../sanity/client";
 import Image from "next/image";
 import { urlFor } from "../../sanity/urlFor";
-import { useEffect, useState } from "react";
+import { Country } from "@/sanity/ImportSanCountryHighlight";
 import Link from "next/link";
 
-type Country = {
-  countryName: string;
-  imageCover: SanityImageSource;
-  slug: string;
-  highlight: boolean;
+type Props = {
+  countries: Country[];
 };
 
-const Hero = () => {
+const Hero = ({ countries }: Props) => {
   const router = useRouter();
   const navigatetoCountries = () => router.push("/countries");
-  const [countries, setCountries] = useState<Country[]>([]);
-
-  useEffect(() => {
-    const fetchCountries = async () => {
-      const query = `
-        *[_type == "country" && highlight == true ]{
-          countryName,
-          imageCover,
-          "slug": slug.current,
-          highlight
-        }
-      `;
-
-      const countries = await sanityClient.fetch<Country[]>(query);
-      setCountries(countries);
-    };
-    fetchCountries();
-  }, []);
 
   return (
-    <div className="relative h-screen w-screen">
+    <div className="flex w-full min-h-screen">
+      {/* Background Hero Image */}
       <Image
-        src={heroPicture}
+        src="/Hero.png"
         alt="Hero Picture"
-        className="object-cover overflow-hidden -z-10"
         fill
+        className="object-cover"
+        priority
       />
 
-      <div className="flex-col absolute inset-0 flex items-center justify-center font-serif space-y-4 text-[#6D2608] font-semibold text-6xl pb-50">
-        <h1 className="tracking-widest first-letter:text-8xl first-letter:font-medium">
+      <div className="absolute inset-0 flex flex-col pb-60 xl:pb-40 sm:pb-0 items-center justify-center space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6 xl:space-y-8 text-[#6D2608] font-serif font-extrabold sm:font-semibold text-[21px] sm:text-2xl md:text-3xl lg:text-5xl  px-4 text-center ">
+        <h1 className="tracking-widest first-letter:text-4xl sm:first-letter:text-3xl md:first-letter:text-4xl lg:first-letter:text-7xl  first-letter:font-medium">
           FOLLOW OUR TIPS
         </h1>
-        <h1 className="tracking-widest">EXPLORE THE WORLD</h1>
+        <h1 className="tracking-widest">
+          EXPLORE THE WORLD
+        </h1>
       </div>
 
-      <div className="flex flex-wrap bottom-10 px-5 absolute z-5 font-sans font-bold text-white space-x-8 w-full items-center justify-center">
+      {/* Countries & More Button */}
+      <div className="absolute bottom-5 sm:bottom-6 md:bottom-8 lg:bottom-10 xl:bottom-12 w-full flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 z-10 text-white font-serif">
         {countries?.map((country) => (
-          <Link href={`/countries/${country.slug}/`} key={country.slug}><div
-            key={country.slug}
-            className="flex flex-col items-end space-y-1 shrink-0"
-          >
-            <p className="text-right pr-2">{country.countryName}</p>
-
-            <Image
-              src={urlFor(country.imageCover).height(300).auto("format").quality(100).url()}
-              alt={country.countryName}
-              height={200}
-              width={4000}
-              style={{ width: "auto", height: "200px" }}
-              className="rounded-xl object-cover"
-            />
-          </div>
+          <Link href={`/countries/${country.slug}/`} key={country.slug}>
+            <div className="flex flex-col items-end space-y-1 shrink-0 w-32.5 sm:w-35 md:w-40 lg:w-45 xl:w-50">
+              <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-right">
+                {country.countryName}
+              </p>
+              <Image
+                src={urlFor(country.imageCover).auto("format").quality(100).url()}
+                alt={country.countryName}
+                width={300}
+                height={200}
+                className="rounded-xl object-cover w-full h-20.5 sm:h-27.5 md:h-32.5 lg:h-37.5 xl:h-45"
+              />
+            </div>
           </Link>
         ))}
-        <div className="flex items-center">
+
+        {/* MORE Button */}
+        <div className="flex items-center mt-2 sm:mt-0">
           <button
             onClick={navigatetoCountries}
-            className=" bg-[#6D2608] text-white ps-5 pe-2 py-2 rounded-full flex items-center justify-center hover:bg-[#6d2608c1] font-normal text-xs"
+            className="bg-[#6D2608] hover:bg-[#6d2608c1] text-white font-normal text-[10px] sm:text-sm md:text-sm lg:text-base py-2 px-12 sm:px-5 rounded-full flex items-center justify-center"
           >
             MORE
-            <span className="ml-2 bg-white text-[#6D2608] rounded-full w-5 h-5 flex items-center justify-center">
+            <span className="ml-2 sm:bg-white sm:text-[#6D2608] sm:rounded-full sm:w-5 sm:h-5 flex items-center justify-center">
               →
             </span>
           </button>
