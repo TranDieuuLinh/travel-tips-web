@@ -88,6 +88,7 @@ const Navbar = () => {
             alt="Logo Image"
             fill
             className="object-contain"
+             sizes="(max-width: 640px) 100vw, 50vw"
           />
         </div>
         {!name && <Link href="/">TRAVEL WITH KNOWLEDGE</Link>}

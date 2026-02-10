@@ -1,10 +1,11 @@
 "use client";
-import { Post } from "@/sanity/ImportSanPost";
+import { Post, myPortableTextComponents } from "@/sanity/ImportSanPost";
 import { urlFor } from "@/sanity/urlFor";
 import Image from "next/image";
 import { PortableText } from "next-sanity";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+
 type Props = {
   countrySlug: string;
   posts: Post[];
@@ -66,13 +67,13 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
 
           {/* Free Content */}
           <div className="font-sans tracking-normal text-xs sm:text-base md:text-lg lg:text-xl text-left">
-            <PortableText value={fetchPost.freeContent} />
+            <PortableText value={fetchPost.freeContent} components={myPortableTextComponents}/>
           </div>
 
           {/* Paid Content */}
           {paid && (
             <div className="font-sans tracking-normal text-xs sm:text-base md:text-lg lg:text-xl text-left pt-2">
-              <PortableText value={fetchPost.content} />
+              <PortableText value={fetchPost.content} components={myPortableTextComponents}/>
             </div>
           )}
         </div>

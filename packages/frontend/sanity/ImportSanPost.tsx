@@ -1,6 +1,12 @@
 import { SanityImageSource } from "@sanity/image-url";
 import { sanityClient } from "./client";
-import { PortableTextBlock } from "next-sanity";
+import { PortableTextBlock, PortableTextReactComponents } from "next-sanity";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'; 
+import { nightOwl } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+
+import Image from "next/image";
+import { urlFor } from "./urlFor";
 
 export type Post = {
   postTitle: string;
@@ -9,6 +15,65 @@ export type Post = {
   freeContent: PortableTextBlock[];
   highlightImage: SanityImageSource;
   previewContent: PortableTextBlock[];
+};
+
+export const myPortableTextComponents: Partial<PortableTextReactComponents> = {
+  block: {
+    normal: ({ children }) => (
+      <p className="font-sans tracking-normal text-xs sm:text-base text-left">
+        {children}
+      </p>
+    ),
+    h1: ({ children }) => (
+      <h1 className="text-xl sm:text-2xl font-extrabold text-left">
+        {children}
+      </h1>
+    ),
+    h2: ({ children }) => (
+      <h2 className="text-xl sm:text-2xl font-bold text-left">{children}</h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className="text-xl sm:text-xl font-bold text-left">{children}</h3>
+    ),
+    blockquote: ({ children }) => (
+      <blockquote className="border-l-gray-400 border-l-4  italic font-extralight tracking-tight text-heading text-xs sm:text-base">
+        {children}
+      </blockquote>
+    ),
+  },
+
+  listItem: {
+    bullet: ({ children }) => (
+      <li className="list-disc list-inside pl-6 font-sans tracking-normal text-xs sm:text-base text-left">
+        {children}
+      </li>
+    ),
+    number: ({ children }) => (
+      <li className="list-decimal list-inside pl-6 font-sans tracking-normal text-xs sm:text-base text-left">
+        {children}
+      </li>
+    ),
+  },
+
+  types: {
+    image: ({ value }) => (
+      <div className="flex justify-center my-4">
+        <Image
+          src={urlFor(value).quality(100).url()}
+          width={200}
+          height={200}
+          style={{ width: "300", height: "300" }}
+          alt=""
+        />
+      </div>
+    ),
+    callToAction: ({ value, isInline }) =>
+      isInline ? (
+        <a href={value.url}>{value.text}</a>
+      ) : (
+        <div className="callToAction">{value.text}</div>
+      ),
+  },
 };
 
 export async function ImportSanPost(slug?: string, countrySlug?: string) {

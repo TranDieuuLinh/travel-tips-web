@@ -176,7 +176,7 @@ const PurchaseBox = ({ countries }: Props) => {
           className="border rounded px-2 py-1 flex justify-between items-center cursor-pointer"
           onClick={() =>
             countriesDrpDwnList.length > 0 && setDropDown(!dropDown)
-          } // only clickable if countries exist
+          } 
         >
           <span className="font-extralight text-[8px] sm:text-sm">
             {countriesDrpDwnList.length > 0
