@@ -18,7 +18,7 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 app.use(cookieParser());
 
-const allowedOrigins = ['http://157.180.113.69', 'http://157.180.113.69:3001'];
+const allowedOrigins = ['http://157.180.113.69', `${process.env.FRONTEND_URL}`];
 app.use(cors({
   origin: function(origin, callback){
     if(!origin || allowedOrigins.indexOf(origin) !== -1){
@@ -122,12 +122,14 @@ app.post('/create-checkout-session', async (req, res) => {
 
 
 
-app.get(`payment-fail`,async(req,res) =>{
-  return res.send('Checkout fail')
-})
+app.get('/complete', async (req, res) => {
+  res.set('Refresh', `3; url=${process.env.FRONTEND_URL}/countries`);
+  res.send('Checkout has completed. You will be redirected shortly...');
+});
 
-app.get(`/complete`, async (req, res) => {
-  return res.send('Checkout has completed');
+app.get('/payment-fail', async (req, res) => {
+  res.set('Refresh', `3; url=${process.env.FRONTEND_URL}/countries`);
+  res.send('Checkout failed. You will be redirected shortly...');
 });
 
 // Auth routes
