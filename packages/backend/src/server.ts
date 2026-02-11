@@ -18,16 +18,8 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 app.use(cookieParser());
 
-const allowedOrigins = ['http://localhost:3001','http://localhost:3000'];
 app.use(cors({
-  // origin: function(origin,callback){
-
-  //   if(!origin) return callback(null,true);
-
-  //   if(allowedOrigins.includes(origin)) return callback(null,true);
-  //   else return callback( new Error('Not allowed by CORS'));
-  // }, 
-  origin: 'http://localhost:3001',
+  origin: `${process.env.FRONTEND_URL}`,
   methods:['GET','POST','DELETE','UPDATE'],
   credentials:true,
 }))
