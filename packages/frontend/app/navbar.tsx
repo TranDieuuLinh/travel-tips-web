@@ -61,7 +61,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/login/me", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/login/me`, {
           method: "GET",
           credentials: "include",
         });
