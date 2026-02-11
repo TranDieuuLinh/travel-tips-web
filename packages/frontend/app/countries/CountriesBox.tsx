@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { MdPaid } from "react-icons/md";
 import React from "react";
 import { config } from "dotenv";
-config({quiet:true})
+config({ quiet: true });
 
 type Props = {
   countries: Country[];
@@ -55,16 +55,19 @@ const CountriesBox = ({ countries }: Props) => {
   useEffect(() => {
     const checklogin = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/login/me`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_APP_URL}/login/me`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (!response.ok) return;
         const result = await response.json();
         if (!result.id || !result.email) return;
 
         const paidcountryRes = await fetch(
-          `${process.env.NEXT_PUBLICE_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
+          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
         );
         if (!paidcountryRes.ok) return;
         const paidcountrydata = await paidcountryRes.json();
@@ -78,31 +81,33 @@ const CountriesBox = ({ countries }: Props) => {
 
   return (
     <div className="flex flex-col justify-center min-h-screen items-center pt-18">
-      <div className="w-52 md:w-64 lg:w-72 bg-white shadow rounded px-6 md:px-8 py-4 md:py-6 space-y-1">
-        <div
-          ref={dropdownMenuRef}
-          className="border rounded px-2 py-1 flex justify-between items-center cursor-pointer"
-          onClick={() => setDropDown(!dropDown)}
-        >
-         <div className="flex justify-between w-full">
-         <span>Sort By </span>
-         <span>▼</span>
-          </div> 
-        </div>
+      {paidcountries.length > 0 && (
+        <div className="w-52 md:w-64 lg:w-72 bg-white shadow rounded px-6 md:px-8 py-4 md:py-6 space-y-1">
+          <div
+            ref={dropdownMenuRef}
+            className="border rounded px-2 py-1 flex justify-between items-center cursor-pointer"
+            onClick={() => setDropDown(!dropDown)}
+          >
+            <div className="flex justify-between w-full text-xs sm:text-base">
+              <span>Sort By </span>
+              <span>▼</span>
+            </div>
+          </div>
 
-        <div className="bg-gray-100">
-          {dropDown &&
-            countriesDrpDwnList.map((p, index) => (
-              <p
-                key={index}
-                onClick={() => handleSelect(p)}
-                className="px-2 py-1 hover:bg-red-100 cursor-pointer text-[8px] sm:text-sm rounded"
-              >
-                {p}
-              </p>
-            ))}
+          <div className="bg-gray-100">
+            {dropDown &&
+              countriesDrpDwnList.map((p, index) => (
+                <p
+                  key={index}
+                  onClick={() => handleSelect(p)}
+                  className="px-2 py-1 hover:bg-red-100 cursor-pointer text-[8px] sm:text-sm rounded"
+                >
+                  {p}
+                </p>
+              ))}
+          </div>
         </div>
-      </div>
+      )}
       <div className="flex flex-wrap justify-center items-center px-4 sm:px-6 md:px-12 pt-10 pb-10 gap-4 sm:gap-6 md:gap-8 font-sans font-bold ">
         {sorted.map((country) => (
           <Link href={`/countries/${country.slug}`} key={country.slug}>

@@ -24,7 +24,7 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
   useEffect(() => {
     const checklogin = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/login/me`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/login/me`, {
           method: "GET",
           credentials: "include",
         });
@@ -33,7 +33,7 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
         if (!result.id || !result.email) return;
 
         const paidcountryRes = await fetch(
-          `${process.env.NEXT_PUBLICE_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
+          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
         );
         if (!paidcountryRes.ok) return;
         const paidcountrydata = await paidcountryRes.json();

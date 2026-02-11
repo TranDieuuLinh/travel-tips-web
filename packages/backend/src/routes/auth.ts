@@ -39,7 +39,9 @@ router.get('/verify', async (req, res) => {
 
 //send email to user with magic link
 router.post('/mail', async (req, res) => {
+  console.log("here");
   const { email } = req.body;
+  console.log(email);
   if (!email) return res.status(404).json({ 'message': 'Please enter email' });
 
   try {

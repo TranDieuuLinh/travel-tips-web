@@ -10,7 +10,7 @@ const Page = () => {
   useEffect(() => {
     const logoutUser = async () => {
       try {
-        await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/logout`, {
+        await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/logout`, {
           method: "POST",
           credentials: "include",
         });

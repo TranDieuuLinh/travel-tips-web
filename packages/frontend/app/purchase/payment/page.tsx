@@ -14,7 +14,7 @@ const Page = () => {
       try {
         if (!user_id || !country_slug || !quantity) return;
         const response = await fetch(
-          `${process.env.NEXT_PUBLICE_APP_URL}/create-checkout-session`,
+          `${process.env.NEXT_PUBLIC_APP_URL}/create-checkout-session`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

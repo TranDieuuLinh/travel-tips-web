@@ -20,7 +20,7 @@ const SignInBox = () => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/auth/mail`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/auth/mail`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

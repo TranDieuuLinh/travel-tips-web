@@ -3,6 +3,7 @@ import Navbar from "./navbar";
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,

@@ -21,7 +21,7 @@ const Navbar = () => {
   const fetchEditName = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/login/update-name`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/login/update-name`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -135,7 +135,7 @@ const Navbar = () => {
              {name.trim().toUpperCase()} ▼
             </button>
             {dropdownMenu && (
-              <div className="sm:mt-4 absolute bg-neutral-200 rounded p-1 sm:p-3 sm:w-24 w-16 end-0 flex flex-col md:space-y-4 space-y-2 text-[9px] sm:text-sm">
+              <div className="sm:mt-4 absolute bg-neutral-200 rounded p-1 sm:p-3 sm:w-30 w-16 end-0 flex flex-col md:space-y-4 space-y-2 text-[9px] sm:text-sm">
                 <div
                   className="text-gray-500 "
                   onClick={() => setOpenEditName(true)}
@@ -150,7 +150,7 @@ const Navbar = () => {
                             onChange={(e) => setNewName(e.target.value)}
                             placeholder={"New name..."}
                             type="text"
-                            className="w-full border p-0.5 sm:p-1  text-[8px]"
+                            className="w-full border p-0.5 sm:p-1  text-[8px] sm:text-[13px]"
                           ></input>
                           <button
                             type="submit"

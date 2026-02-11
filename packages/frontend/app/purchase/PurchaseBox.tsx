@@ -40,7 +40,7 @@ const PurchaseBox = ({ countries }: Props) => {
   useEffect(() => {
     const checklogin = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/login/me`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/login/me`, {
           method: "GET",
           credentials: "include",
         });
@@ -51,14 +51,14 @@ const PurchaseBox = ({ countries }: Props) => {
         setemail(result.email);
 
         const paidcountryRes = await fetch(
-          `${process.env.NEXT_PUBLICE_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
+          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
         );
         if (!paidcountryRes.ok) return;
         const paidcountrydata = await paidcountryRes.json();
         setpaidcountries(paidcountrydata.paidcountries);
 
         const cartRes = await fetch(
-          `${process.env.NEXT_PUBLICE_APP_URL}/basket/cart?userid=${encodeURIComponent(result.id)}`
+          `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart?userid=${encodeURIComponent(result.id)}`
         );
 
         const cartData: { cart?: { cart_country_name: string }[] } =
@@ -91,7 +91,7 @@ const PurchaseBox = ({ countries }: Props) => {
   const handleSelect = async (country: string) => {
     if (userId === 0) return alert("Login Required!");
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/basket/cart`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -113,7 +113,7 @@ const PurchaseBox = ({ countries }: Props) => {
   const handleDelete = async (country: string) => {
     if (userId === 0) return alert("Login Required!");
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/basket/cart`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
