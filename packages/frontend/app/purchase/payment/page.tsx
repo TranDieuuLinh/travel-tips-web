@@ -1,13 +1,14 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 
 const Page = () => {
   const searchQuery = useSearchParams();
   const user_id = searchQuery.get("user_id");
-  const country_slug = searchQuery.get("country_slug")?.split(",") || [];
   const quantity = searchQuery.get("quantity");
   const email = searchQuery.get("email");
+  const country_slug  = useMemo(() => searchQuery.get("country_slug")?.split(",") || [], [searchQuery])
+  
   useEffect(() => {
     const fetchCheckout = async () => {
       try {
