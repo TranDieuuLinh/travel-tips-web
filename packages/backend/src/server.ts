@@ -18,11 +18,18 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 app.use(cookieParser());
 
+const allowedOrigins = ['http://157.180.113.69', 'http://157.180.113.69:3001'];
 app.use(cors({
-  origin: `${process.env.FRONTEND_URL}`,
-  methods:['GET','POST','DELETE','UPDATE'],
-  credentials:true,
-}))
+  origin: function(origin, callback){
+    if(!origin || allowedOrigins.indexOf(origin) !== -1){
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST','UPDATE','DELETE'],
+}));
 
 
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
