@@ -1,7 +1,14 @@
-import { config } from 'dotenv';
-config({ quiet: true });
+import path from 'path';
+import { config } from 'dotenv'
 import {Pool} from 'pg';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+config({ path: path.resolve(__dirname, '../.env') });
+
+console.log('DB_USER:', process.env.DB_USER);
 
 export const pool = new Pool({
     user: process.env.DB_USER,

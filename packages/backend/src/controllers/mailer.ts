@@ -5,8 +5,8 @@ import { addTokenDB, generateMagicLink } from '../database/TokenService.ts';
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.EMAIL_PASS
