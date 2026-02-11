@@ -6,6 +6,8 @@ import { Country } from "../../sanity/ImportSanCountry";
 import { useEffect, useState } from "react";
 import { MdPaid } from "react-icons/md";
 import React from "react";
+import { config } from "dotenv";
+config({quiet:true})
 
 type Props = {
   countries: Country[];
@@ -53,7 +55,7 @@ const CountriesBox = ({ countries }: Props) => {
   useEffect(() => {
     const checklogin = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/login/me`, {
+        const response = await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/login/me`, {
           method: "GET",
           credentials: "include",
         });
@@ -62,7 +64,7 @@ const CountriesBox = ({ countries }: Props) => {
         if (!result.id || !result.email) return;
 
         const paidcountryRes = await fetch(
-          `http://localhost:3000/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
+          `${process.env.NEXT_PUBLICE_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
         );
         if (!paidcountryRes.ok) return;
         const paidcountrydata = await paidcountryRes.json();

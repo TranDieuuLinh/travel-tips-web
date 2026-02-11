@@ -5,6 +5,8 @@ import Image from "next/image";
 import { PortableText } from "next-sanity";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { config } from "dotenv";
+config({quiet:true});
 
 type Props = {
   countrySlug: string;
@@ -22,7 +24,7 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
   useEffect(() => {
     const checklogin = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/login/me`, {
+        const response = await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/login/me`, {
           method: "GET",
           credentials: "include",
         });
@@ -31,7 +33,7 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
         if (!result.id || !result.email) return;
 
         const paidcountryRes = await fetch(
-          `http://localhost:3000/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
+          `${process.env.NEXT_PUBLICE_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
         );
         if (!paidcountryRes.ok) return;
         const paidcountrydata = await paidcountryRes.json();

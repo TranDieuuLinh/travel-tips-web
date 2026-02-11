@@ -8,15 +8,15 @@ export type Country = {
   highlight: boolean;
 };
 
-export async function HighlightCountries(highlight?:boolean) {
-    const query = `
+export async function HighlightCountries(highlight?: boolean) {
+  const query = `
             *[_type == "country" && highlight == true ]{
               countryName,
               imageCover,
               "slug": slug.current,
               highlight
-            }
-          `;
-    
-          return await sanityClient.fetch<Country[]>(query);
+            }`;
+
+
+  return await sanityClient.fetch<Country[]>(query);
 }

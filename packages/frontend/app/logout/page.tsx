@@ -2,13 +2,15 @@
 import React from "react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { config } from "dotenv";
+config({quiet:true});
 
 const Page = () => {
   const router = useRouter();
   useEffect(() => {
     const logoutUser = async () => {
       try {
-        await fetch("http://localhost:3000/logout", {
+        await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/logout`, {
           method: "POST",
           credentials: "include",
         });

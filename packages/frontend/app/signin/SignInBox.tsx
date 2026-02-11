@@ -2,6 +2,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import isEmail from "validator/lib/isEmail";
+import { config } from "dotenv";
+config({ quiet: true });
 
 const SignInBox = () => {
   const [email, setEmail] = useState("");
@@ -18,7 +20,7 @@ const SignInBox = () => {
 
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/auth/mail", {
+      const response = await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/auth/mail`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

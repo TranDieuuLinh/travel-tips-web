@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { config } from "dotenv";
+config({ quiet: true });
 
 const Navbar = () => {
   const [name, setName] = useState("");
@@ -19,7 +21,7 @@ const Navbar = () => {
   const fetchEditName = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/login/update-name`, {
+      const response = await fetch(`${process.env.NEXT_PUBLICE_APP_URL}/login/update-name`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
