@@ -17,17 +17,29 @@ const transporter = nodemailer.createTransport({
 
 
 export async function sendMail(mail: string) {
-  const { token, magicLink } = generateMagicLink();
-  await addTokenDB(mail, token);
-  await transporter.sendMail(
-    {
+  try {
+    console.log("📨 Preparing to send email to:", mail);
+
+    const { token, magicLink } = generateMagicLink();
+    await addTokenDB(mail, token);
+
+    console.log("🔑 Token generated:", token);
+
+    const info = await transporter.sendMail({
       from: 'dieulinh268268@gmail.com',
       to: mail,
       subject: 'Your URL',
-      html: `<p>Your URL is ${magicLink} <br> Please use this link to access your account!</p>`
-    }
-  )
-};
+      html: `<p>Your URL is ${magicLink}<br>Please use this link to access your account!</p>`
+    });
+
+    console.log("✅ Email sent:", info.messageId);
+
+  } catch (err) {
+    console.error("❌ Send mail failed:", err);
+    throw err;
+  }
+}
+
 
 export async function sendReceipt(userEmail: string, country_name_arr: string[], paymentIntentId: string, paid_date: number)
 {
