@@ -179,7 +179,7 @@ const Navbar = () => {
             href="/signin"
             className={isActive("/signin") ? "text-neutral-300" : ""}
           >
-            SIGN INnnn
+            SIGN IN
           </Link>
         )}
       </div>
