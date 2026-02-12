@@ -1,18 +1,15 @@
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
-import {visionTool} from '@sanity/vision'
-import {schemaTypes} from './schemaTypes'
+import { defineConfig } from 'sanity'
+import { structureTool } from 'sanity/structure'
+import { visionTool } from '@sanity/vision'
+import { schemaTypes } from './schemaTypes'
 import type { UserConfig as ViteConfig } from 'vite'
-import { config } from 'dotenv';
-config({ quiet: true });
-
 
 export default defineConfig({
   name: 'default',
   title: 'CMSSanity',
 
-  projectId: process.env.PROJECTID!,
-  dataset: process.env.DATASET!,
+  projectId: '3b2dc5to',
+  dataset: 'production',
 
   plugins: [structureTool(), visionTool()],
 
@@ -20,7 +17,6 @@ export default defineConfig({
     types: schemaTypes,
   },
 
-  
   vite: (config: ViteConfig) => ({
     ...config,
     optimizeDeps: {

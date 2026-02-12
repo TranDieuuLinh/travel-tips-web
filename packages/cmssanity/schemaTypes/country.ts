@@ -16,6 +16,11 @@ export const country = defineType({
             type:'image'
         }),
         defineField({
+            name:'countryDescription',
+            title: 'Country Description',
+            type:'string'
+        }),
+        defineField({
             name:'slug',
             title:'slug',
             type:'slug',
