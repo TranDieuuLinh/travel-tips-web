@@ -21,7 +21,7 @@ export async function sendMail(mail: string) {
     await addTokenDB(mail, token);
 
     const info = await transporter.sendMail({
-      from: 'no-reply@travelknowled.ge',
+      from: '"Travel With Knowledge" <dieulinh268268@gmail.com>',
       to: mail,
       subject: 'Your Magic Link',
       html: `
@@ -42,7 +42,7 @@ export async function sendMail(mail: string) {
           border-radius: 5px;
         ">Access Account</a>
         <p style="color: #999; font-size: 12px; margin-top: 20px;">
-          If you did not request this, you can safely ignore this email.
+          This URL is valid for 10 minutes.
         </p>
       </body>
     </html>
@@ -94,7 +94,7 @@ export async function sendReceipt(userEmail: string, country_name_arr: string[],
 
 
   await transporter.sendMail({
-    from: 'no-reply@travelknowled.ge',
+    from: '"Travel With Knowledge" <dieulinh268268@gmail.com>',
     to: userEmail,
     subject: 'Payment Receipt',
     html,
