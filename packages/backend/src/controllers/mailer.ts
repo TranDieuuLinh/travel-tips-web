@@ -20,14 +20,10 @@ export async function sendMail(mail: string) {
     const { token, magicLink } = generateMagicLink();
     await addTokenDB(mail, token);
 
-    const info = await transporter.sendMail({
-      from: '"Travel With Knowledge" <dieulinh268268@gmail.com>',
-      to: mail,
-      subject: 'Your Magic Link',
-      html: `
+    const html = `
     <html>
       <body style="font-family: Arial, sans-serif; background-color: #f9fafc; padding: 40px; margin: 0; text-align: center;">
-        <h2 style="color: #333;">Your Access Link</h2>
+        <h2 style="color: #333;">Your Magic Link</h2>
         <p style="color: #555; font-size: 16px;">
           Click the link below to securely access your account:
         </p>
@@ -47,6 +43,12 @@ export async function sendMail(mail: string) {
       </body>
     </html>
   `
+
+    const info = await transporter.sendMail({
+      from: '"Travel With Knowledge" <dieulinh268268@gmail.com>',
+      to: mail,
+      subject: 'Your Magic Link',
+      html,
     });
 
     console.log("✅ Email sent:", info.messageId);
