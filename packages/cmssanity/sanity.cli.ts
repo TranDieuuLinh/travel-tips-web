@@ -4,8 +4,8 @@ config({ quiet: true });
 
 export default defineCliConfig({
   api: {
-    projectId: process.env.PROJECTID!,
-    dataset: process.env.DATASET!,
+    projectId: '3b2dc5to',
+    dataset: 'production',
   },
   deployment: {
     /**
