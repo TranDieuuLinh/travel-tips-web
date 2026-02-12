@@ -12,32 +12,47 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL,
     pass: process.env.EMAIL_PASS
   },
-  logger: true,
-  debug: true,
 });
 
 
 export async function sendMail(mail: string) {
   try {
-    console.log("📨 Preparing to send email to:", mail);
-
     const { token, magicLink } = generateMagicLink();
     await addTokenDB(mail, token);
 
-    console.log("🔑 Token generated:", token);
-
     const info = await transporter.sendMail({
-      from: 'dieulinh268268@gmail.com',
+      from: 'no-reply@travelknowled.ge',
       to: mail,
-      subject: 'Your URL',
-      html: `<p>Your URL is ${magicLink}<br>Please use this link to access your account!</p>`
+      subject: 'Your Magic Link',
+      html: `
+    <html>
+      <body style="font-family: Arial, sans-serif; background-color: #f9fafc; padding: 40px; margin: 0; text-align: center;">
+        <h2 style="color: #333;">Your Access Link</h2>
+        <p style="color: #555; font-size: 16px;">
+          Click the link below to securely access your account:
+        </p>
+        <a href="${magicLink}" style="
+          display: inline-block;
+          margin: 20px 0;
+          padding: 15px 25px;
+          background-color: #4a90e2;
+          color: #ffffff;
+          text-decoration: none;
+          font-weight: bold;
+          border-radius: 5px;
+        ">Access Account</a>
+        <p style="color: #999; font-size: 12px; margin-top: 20px;">
+          If you did not request this, you can safely ignore this email.
+        </p>
+      </body>
+    </html>
+  `
     });
 
     console.log("✅ Email sent:", info.messageId);
 
   } catch (err) {
     console.error("❌ Send mail failed:", err);
-    throw err;
   }
 }
 

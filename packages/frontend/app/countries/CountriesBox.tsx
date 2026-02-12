@@ -89,7 +89,7 @@ const CountriesBox = ({ countries }: Props) => {
             onClick={() => setDropDown(!dropDown)}
           >
             <div className="flex justify-between w-full text-xs sm:text-base">
-              <span>Sort By </span>
+              <span>Sort By... </span>
               <span>▼</span>
             </div>
           </div>

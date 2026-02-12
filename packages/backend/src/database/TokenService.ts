@@ -35,7 +35,7 @@ cron.schedule('0 2 * * 2', () => {
 export async function addTokenDB(mail: string, token: string) {
   try {
     const tokenCreatedTime = Date.now();
-    const tokenEndedTime = tokenCreatedTime + (1500 * 60 * 1000);
+    const tokenEndedTime = tokenCreatedTime + (10 * 60 * 1000);
    
     const userId = await pool.query(`SELECT user_id FROM users WHERE user_email = $1`, [mail]);
     const numberUserId = Number(userId.rows[0].user_id)
