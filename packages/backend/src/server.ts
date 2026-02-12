@@ -19,6 +19,9 @@ app.use(cookieParser());
 
 
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+console.log('💡 Webhook hit');
+  console.log('Headers:', req.headers);
+  console.log('Body:', req.body.toString());
   const sig = req.headers['stripe-signature']!;
   try {
     let event;
@@ -71,18 +74,22 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
   }
 });
 
-const allowedOrigins = ['http://www.travelknowled.ge', `${process.env.FRONTEND_URL}`];
-app.use(cors({
-  origin: function(origin, callback){
-    if(!origin || allowedOrigins.indexOf(origin) !== -1){
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST','UPDATE','DELETE'],
-}));
+app.use((req, res, next) => {
+  if (req.path === '/webhook') return next();
+  cors({
+    origin: function(origin, callback){
+      const allowedOrigins = ['http://www.travelknowled.ge', process.env.FRONTEND_URL];
+      if(!origin || allowedOrigins.indexOf(origin) !== -1){
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ['GET','POST','UPDATE','DELETE']
+  })(req, res, next);
+});
+
 
 app.use(express.json());
 
