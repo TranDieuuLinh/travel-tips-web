@@ -46,8 +46,8 @@ pipeline {
 
                         // PM2 restart/start commands
                         sh '''
-                        pm2 restart frontend || PORT=3000 HOST=0.0.0.0 pm2 start npm --name frontend -- start --prefix packages/frontend
                         pm2 restart backend || pm2 start packages/backend/src/server.ts --name backend --interpreter ts-node
+                        pm2 restart frontend || PORT=3001 HOST=0.0.0.0 pm2 start npm --name frontend -- start --prefix packages/frontend
                         pm2 status
                         '''
                     }
