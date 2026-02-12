@@ -8,7 +8,7 @@ import cron from 'node-cron';
 export function generateMagicLink() {
   const token = crypto.randomBytes(32).toString('base64');
   const encodedURL = encodeURIComponent(token);
-  const magicLink = `${process.env.APP_URL}/auth/verify?token=${encodedURL}`;
+  const magicLink = `${process.env.APP_URL}/api/auth/verify?token=${encodedURL}`;
 
   return { token, magicLink };
 }

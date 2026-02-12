@@ -15,10 +15,9 @@ const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
-
 app.use(cookieParser());
 
-const allowedOrigins = ['http://157.180.113.69', `${process.env.FRONTEND_URL}`];
+const allowedOrigins = ['http://www.travelknowled.ge', `${process.env.FRONTEND_URL}`];
 app.use(cors({
   origin: function(origin, callback){
     if(!origin || allowedOrigins.indexOf(origin) !== -1){
@@ -74,7 +73,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
 app.use(express.json());
 
-app.post('/refund', async (req, res) => {
+app.post('/api/refund', async (req, res) => {
   const { payment_intent_id } = req.body;
   try {
     console.log(payment_intent_id);
@@ -91,7 +90,7 @@ app.post('/refund', async (req, res) => {
 
 
 //stripe payment
-app.post('/create-checkout-session', async (req, res) => {
+app.post('/api/create-checkout-session', async (req, res) => {
   const { country_slug, user_id, quantity, email } = req.body;
 
   const session = await stripe.checkout.sessions.create({
@@ -114,35 +113,35 @@ app.post('/create-checkout-session', async (req, res) => {
       customer_email: JSON.stringify(email)
     },
     mode: 'payment',
-    success_url: `${process.env.APP_URL}/complete`,
-    cancel_url: `${process.env.APP_URL}/payment-fail`,
+    success_url: `${process.env.APP_URL}/api/complete`,
+    cancel_url: `${process.env.APP_URL}/api/payment-fail`,
   })
   res.json({sessionurl:session.url})
 });
 
 
 
-app.get('/complete', async (req, res) => {
-  res.set('Refresh', `3; url=${process.env.FRONTEND_URL}/countries`);
+app.get('/api/complete', async (req, res) => {
+  res.set('Refresh', `3; url=${process.env.FRONTEND_URL}/purchase`);
   res.send('Checkout has completed. You will be redirected shortly...');
 });
 
-app.get('/payment-fail', async (req, res) => {
-  res.set('Refresh', `3; url=${process.env.FRONTEND_URL}/countries`);
+app.get('/api/payment-fail', async (req, res) => {
+  res.set('Refresh', `3; url=${process.env.FRONTEND_URL}/purchase`);
   res.send('Checkout failed. You will be redirected shortly...');
 });
 
 // Auth routes
-app.use(`/auth`, auth);
+app.use(`/api/auth`, auth);
 
 //me routes
-app.use(`/login`,login);
+app.use(`/api/login`,login);
 
-app.use(`/basket`,basket);
+app.use(`/api/basket`,basket);
 
-app.use(`/paidcountries`,paidcountries)
+app.use(`/api/paidcountries`,paidcountries)
 
-app.get(`/users`, async (req, res) => {
+app.get(`/api/users`, async (req, res) => {
   const user = await pool.query(`SELECT * from users`);
   const token = await pool.query(`SELECT * from token`);
   const paid = await pool.query(`SELECT * from paid_country`);
@@ -153,12 +152,13 @@ app.get(`/users`, async (req, res) => {
 });
 
 //logout user by clearing cookie
-app.post('/logout',(req,res) => {
+app.post('/api/logout',(req,res) => {
   res.clearCookie('information', { httpOnly: true, sameSite: 'lax',path: '/' });
   res.status(200).json({ message: "Logged out" });
 });
 
 
-app.listen(process.env.PORT, () => {
-  console.log(`Example app listening on port ${process.env.APP_URL}`)
-})
+app.listen(3000, () => {
+  console.log('Backend running on port 3000');
+});
+
