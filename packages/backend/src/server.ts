@@ -34,8 +34,20 @@ app.use(cors({
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature']!;
   try {
-    const event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-
+    let event;
+    if (!endpointSecret) {
+      return res.status(400).send('No webhook secret');
+    }
+      try {
+        event = stripe.webhooks.constructEvent(
+          req.body,
+          sig,
+          endpointSecret
+        );
+      } catch (err) {
+        console.log(`⚠️ Webhook signature verification failed.`, (err as Error).message);
+        return res.sendStatus(400);
+      }
     const session = event.data.object as Stripe.Checkout.Session;
     const metadata = session.metadata;
     if (!metadata) return res.status(400).json({ error: 'Missing Json' });
