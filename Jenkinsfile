@@ -21,18 +21,28 @@ pipeline {
                     usernameVariable: 'GIT_USERNAME',
                     passwordVariable: 'GIT_PASSWORD'
                 )]) {
-                    dir('packages/frontend') {
+                    dir('/home/dieulinh/apps/travel-tips-web') {
+
+                        // Update repo
                         sh '''
-                        npm install
-                        npm run build
+                        git remote set-url origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/TranDieuuLinh/travel-tips-web.git
+                        git fetch --all
+                        git reset --hard origin/main
                         '''
 
-                        sh '''
-                        # Frontend: try restart, otherwise start
-                        pm2 restart frontend || PORT=3000 HOST=0.0.0.0 pm2 start npm --name frontend -- start --prefix packages/frontend
+                        // Frontend install & build in its own folder
+                        dir('packages/frontend') {
+                            sh '''
+                            npm install
+                            npm run build
+                            '''
+                        }
 
-                        # Backend: try restart, otherwise start
+                        // PM2 restart/start commands
+                        sh '''
+                        pm2 restart frontend || PORT=3000 HOST=0.0.0.0 pm2 start npm --name frontend -- start --prefix packages/frontend
                         pm2 restart backend || pm2 start packages/backend/src/server.ts --name backend --interpreter ts-node
+                        pm2 status
                         '''
                     }
                 }
