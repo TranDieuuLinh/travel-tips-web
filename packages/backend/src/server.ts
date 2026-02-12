@@ -17,25 +17,13 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 app.use(cookieParser());
 
-const allowedOrigins = ['http://www.travelknowled.ge', `${process.env.FRONTEND_URL}`];
-app.use(cors({
-  origin: function(origin, callback){
-    if(!origin || allowedOrigins.indexOf(origin) !== -1){
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST','UPDATE','DELETE'],
-}));
-
 
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature']!;
   try {
     let event;
     if (!endpointSecret) {
+      console.log('❌ No webhook secret configured');
       return res.status(400).send('No webhook secret');
     }
       try {
@@ -45,7 +33,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
           endpointSecret
         );
       } catch (err) {
-        console.log(`⚠️ Webhook signature verification failed.`, (err as Error).message);
+        console.log(`[${new Date().toISOString()}] Webhook signature verification failed:`, (err as Error).message);
         return res.sendStatus(400);
       }
     const session = event.data.object as Stripe.Checkout.Session;
@@ -78,10 +66,23 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     }
     return res.status(200).json({ received: true });
   } catch (error) {
-    console.log((error as Error).message);
+    console.log('❌ Webhook processing error:', (error as Error).message);
     return res.sendStatus(400);
   }
 });
+
+const allowedOrigins = ['http://www.travelknowled.ge', `${process.env.FRONTEND_URL}`];
+app.use(cors({
+  origin: function(origin, callback){
+    if(!origin || allowedOrigins.indexOf(origin) !== -1){
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST','UPDATE','DELETE'],
+}));
 
 app.use(express.json());
 
