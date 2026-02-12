@@ -2,6 +2,7 @@ import { config } from 'dotenv';
 config({ quiet: true });
 import nodemailer from 'nodemailer';
 import { addTokenDB, generateMagicLink } from '../database/TokenService.ts';
+import { format } from 'date-fns-tz';
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -43,19 +44,44 @@ export async function sendMail(mail: string) {
 
 export async function sendReceipt(userEmail: string, country_name_arr: string[], paymentIntentId: string, paid_date: number)
 {
+  const dateInTZ = format(new Date(paid_date), "yyyy-MM-dd HH:mm:ss 'GMT'XXX");
+
+  const html = `
+<html>
+  <body style="
+    font-family: Arial, sans-serif; 
+    background: linear-gradient(135deg, #fdf6f0, #f0f4ff); 
+    padding: 40px;
+  ">
+    <div style="
+      max-width: 600px; 
+      margin: auto; 
+      background: #ffffff; 
+      padding: 30px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    ">
+      <h2 style="color: #333; text-align: center;">Payment Receipt</h2>
+      <p style="text-align: center; color: #555;">Thank you for your purchase!</p>
+      <hr style="border: none; border-top: 1px solid #eee;">
+      <p><strong>Countries Purchased:</strong> ${country_name_arr.join(', ')}</p>
+      <p><strong>Payment ID:</strong> ${paymentIntentId}</p>
+      <p><strong>Date:</strong> ${dateInTZ}</p>
+      <p><strong>Amount:</strong> $${country_name_arr.length * 2} AUD</p>
+      <hr style="border: none; border-top: 1px solid #eee;">
+      <p style="font-size: 12px; color: #777; text-align: center;">
+        This is an automated receipt. Please do not reply to this email.
+      </p>
+    </div>
+  </body>
+</html>
+`;
+
+
   await transporter.sendMail({
-    from: 'no-reply@yourdomain.com',
+    from: 'no-reply@travelknowled.ge',
     to: userEmail,
     subject: 'Payment Receipt',
-    text: `Hello,
-
-      Your payment for countries: ${country_name_arr.join(', ')} has been successfully processed.
-
-      Payment ID: ${paymentIntentId}
-      Date: ${new Date(paid_date).toLocaleString()}
-      Amount: $${country_name_arr.length * 2} AUD
-
-      Thank you for your purchase!
-      `,
-        });
+    html,
+  })
 }

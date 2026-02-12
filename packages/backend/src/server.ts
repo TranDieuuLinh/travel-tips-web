@@ -19,14 +19,10 @@ app.use(cookieParser());
 
 
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
-console.log('💡 Webhook hit');
-  console.log('Headers:', req.headers);
-  console.log('Body:', req.body.toString());
   const sig = req.headers['stripe-signature']!;
   try {
     let event;
     if (!endpointSecret) {
-      console.log('❌ No webhook secret configured');
       return res.status(400).send('No webhook secret');
     }
       try {
