@@ -15,7 +15,6 @@ const Hero = ({ countries }: Props) => {
 
   return (
     <div className="flex w-full min-h-screen">
-      {/* Background Hero Image */}
       <Image
         src="/Hero.png"
         alt="Hero Picture"
@@ -41,11 +40,11 @@ const Hero = ({ countries }: Props) => {
                 {country.countryName}
               </p>
               <Image
-                src={urlFor(country.imageCover).auto("format").quality(100).url()}
+                src={urlFor(country.imageCover).quality(50).url()}
                 alt={country.countryName}
                 width={300}
                 height={200}
-                className="rounded-xl object-cover w-full h-20.5 sm:h-27.5 md:h-32.5 lg:h-37.5 xl:h-45 hover:scale"
+                className="rounded-xl object-cover w-full h-20.5 sm:h-27.5 md:h-32.5 lg:h-37.5 xl:h-45 hover:scale-110"
               />
             </div>
           </Link>

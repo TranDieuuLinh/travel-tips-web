@@ -16,6 +16,7 @@ type Props = {
 const MainCountry = ({ countrySlug, posts }: Props) => {
   const fetchPost = posts[0];
   const [paid, setpaid] = useState(false);
+  const [userId, setUserId] = useState(0);
   const router = useRouter();
   const movetoPayment = () => {
     router.push("/purchase");
@@ -84,7 +85,7 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
         <div className="flex-col justify-between items-center bottom-0  space-y-5 w-full flex  py-18 bg-linear-to-b from-black/0 to-black/50 font-extrabold font-sans text-white text-lg sm:text-xl md:text-2xl">
           <p>Experience more for only $2!</p>
           <button
-            className="bg-[#6D2608] px-8 sm:px-16 py-2 sm:py-3 text-sm sm:text-base rounded-md hover:bg-[#6d2608c1]"
+            className="bg-[#6D2608] px-8 sm:px-16 py-2 sm:py-3 text-sm sm:text-base rounded-md hover:bg-[#6d2608c1] cursor-pointer"
             onClick={movetoPayment}
           >
             DISCOVER

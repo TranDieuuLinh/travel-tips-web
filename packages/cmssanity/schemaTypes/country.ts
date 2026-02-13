@@ -32,7 +32,8 @@ export const country = defineType({
         defineField({
             name:'highlight',
             title:'Highlight',
-            type:'boolean'
+            type:'boolean',
+            initialValue: false
         })
     ]
 })

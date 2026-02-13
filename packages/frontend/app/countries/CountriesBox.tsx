@@ -6,6 +6,7 @@ import { Country } from "../../sanity/ImportSanCountry";
 import { useEffect, useMemo, useState } from "react";
 import { MdPaid } from "react-icons/md";
 import React from "react";
+import { MdVerified } from "react-icons/md";
 import { config } from "dotenv";
 config({ quiet: true });
 
@@ -29,15 +30,17 @@ const CountriesBox = ({ countries }: Props) => {
     }
   };
 
-  const sorted = useMemo(() => {return [...countries].sort((a, b) => {
-    if (drpdwnType === "paid") {
-      const apaid = paidcountries.includes(a.slug) ? 1 : 0;
-      const bpaid = paidcountries.includes(b.slug) ? 1 : 0;
-      return bpaid - apaid;
-    } else {
-      return a.countryName.localeCompare(b.countryName);
-    }
-  })}, [countries, drpdwnType,paidcountries]);
+  const sorted = useMemo(() => {
+    return [...countries].sort((a, b) => {
+      if (drpdwnType === "paid") {
+        const apaid = paidcountries.includes(a.slug) ? 1 : 0;
+        const bpaid = paidcountries.includes(b.slug) ? 1 : 0;
+        return bpaid - apaid;
+      } else {
+        return a.countryName.localeCompare(b.countryName);
+      }
+    });
+  }, [countries, drpdwnType, paidcountries]);
 
   const handleSelect = (p: string) => {
     if (p === "Country Name") {
@@ -80,39 +83,51 @@ const CountriesBox = ({ countries }: Props) => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center min-h-screen items-center pt-18">
-      {paidcountries.length > 0 && (
-        <div className="w-52 md:w-64 lg:w-72 bg-white shadow rounded px-6 md:px-8 py-4 md:py-6 space-y-1">
-          <div
-            ref={dropdownMenuRef}
-            className="border rounded px-2 py-1 flex justify-between items-center cursor-pointer"
-            onClick={() => setDropDown(!dropDown)}
-          >
-            <div className="flex justify-between w-full text-xs sm:text-base">
-              <span>Sort By... </span>
-              <span>▼</span>
-            </div>
-          </div>
+    <div className="flex flex-col justify-center w-screen min-h-screen items-center pt-10">
+      <div className="relative z-10 items-center">
+        <h2 className="font-serif text-center text-[#6D2608] font-bold text-xl md:text-2xl lg:text-3xl py-2">
+          COUNTRIES
+        </h2>
 
-          <div className="bg-gray-100">
-            {dropDown &&
-              countriesDrpDwnList.map((p, index) => (
-                <p
-                  key={index}
-                  onClick={() => handleSelect(p)}
-                  className="px-2 py-1 hover:bg-red-100 cursor-pointer text-[8px] sm:text-sm rounded"
-                >
-                  {p}
-                </p>
-              ))}
+        {paidcountries.length > 0 && (
+          <div className="relative rounded w-50 pt-2">
+            <div
+              ref={dropdownMenuRef}
+              className="border rounded-2xl px-2 py-1 flex justify-between items-center cursor-pointer bg-white"
+              onClick={() => setDropDown(!dropDown)}
+            >
+              <div className="flex justify-between w-full text-xs sm:text-base space-x-2 font-light">
+                <span>Sort By</span>
+                <span>⇅</span>
+              </div>
+            </div>
+
+            {dropDown && (
+              <div className="absolute left-0 right-0 top-full mt-1 bg-gray-100 w-full z-50 rounded-lg overflow-hidden">
+                {countriesDrpDwnList.map((p, index) => (
+                  <p
+                    key={index}
+                    onClick={() => handleSelect(p)}
+                    className="px-2 py-2 hover:bg-red-100 cursor-pointer text-[8px] sm:text-sm"
+                  >
+                    {p}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      )}
-      <div className="flex flex-wrap justify-center items-center px-4 sm:px-6 md:px-12 pt-10 pb-10 gap-4 sm:gap-6 md:gap-8 font-sans font-bold ">
+        )}
+      </div>
+
+      <div className=" flex flex-wrap justify-center px-4 sm:px-8 md:px-13 pt-10 gap-4 sm:gap-6 md:gap-8 font-sans font-bold pb-10">
         {sorted.map((country) => (
-          <Link href={`/countries/${country.slug}`} key={country.slug}>
-            <div className="flex flex-col shrink-0 border rounded-2xl overflow-hidden w-48 sm:w-40 md:w-60 lg:w-80 xl:w-67.5">
-              <div className="relative w-full h-30 sm:h-30 md:h-44 lg:h-60 xl:h-50">
+          <Link
+            href={`/countries/${country.slug}`}
+            key={country.slug}
+            className="shrink-0 w-48 md:w-64 lg:w-80  flex"
+          >
+            <div className="flex flex-col shadow-2xl rounded-2xl overflow-hidden flex-1 ">
+              <div className="relative w-full h-30 sm:h-30 md:h-44 lg:h-60 xl:h-50 ">
                 <Image
                   src={urlFor(country.imageCover).quality(60).url()}
                   alt={country.countryName}
@@ -120,15 +135,27 @@ const CountriesBox = ({ countries }: Props) => {
                   className="object-cover rounded-t-2xl"
                 />
               </div>
-              <p className="text-center py-2 sm:py-3 text-[10px] sm:text-sm md:text-base lg:text-lg">
-                {country.countryName}{" "}
-                {paidcountries.length > 0 &&
-                  paidcountries.includes(country.slug) && (
-                    <span className=" absolute m-1">
-                      <MdPaid className="text-[#0AB149]" />
-                    </span>
+              <div className="flex flex-col p-4 flex-1">
+                <div className="flex items-center font-serif text-[#6D2608] font-bold text-base sm:text-xl md:text-2xl lg:text-3xl">
+                  {country.countryName}
+                  {paidcountries.includes(country.slug) && (
+                    <MdVerified className="text-[#0AB149] ml-2" size={22} />
                   )}
-              </p>
+                </div>
+
+                <p className="font-serif font-light text-[10px] md:text-base mt-2">
+                  {country.countryDescription}
+                </p>
+              </div>
+              <button
+                onClick={() => <Link href={`/countries/${country.slug}`} />}
+                className="bg-[#6D2608] hover:bg-[#6d260883] text-white font-normal text-[10px] sm:text-sm md:text-sm lg:text-base py-2 px-12 sm:px-5 flex items-center justify-center cursor-pointer"
+              >
+                READ MORE
+                <span className="ml-2 sm:w-5 sm:h-5 flex items-center justify-center">
+                  →
+                </span>
+              </button>
             </div>
           </Link>
         ))}

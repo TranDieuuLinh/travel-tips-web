@@ -2,6 +2,8 @@ import "./styles/global.css";
 import Navbar from "./navbar";
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
+import Image from "next/image";
+import NextTopLoader from "nextjs-toploader";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -26,8 +28,27 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <NextTopLoader color="#008BFF" height={4} />
         <Navbar />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50">
+              <div className="w-16 h-16 relative mb-6">
+                <Image
+                  src="/icon.png"
+                  alt="Logo"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+
+              <div className="flex items-center space-x-3 text-gray-700 text-base sm:text-lg">
+                <span className="inline-block animate-spin text-3xl">🌀</span>
+                <span>Loading...</span>
+              </div>
+            </div>
+          }
+        >
           {children}
         </Suspense>
       </body>

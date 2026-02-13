@@ -9,6 +9,7 @@ router.get('/me', async (req, res) => {
         if(!cookies.information)  return res.status(401).json({ message: 'Unauthorized' });
         
         const parsed = validateUsersCookie(cookies.information);
+
         if (!parsed) return res.status(401).json({ message: 'Unauthorized' });
 
     try {

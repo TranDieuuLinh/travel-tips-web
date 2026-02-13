@@ -20,15 +20,18 @@ const SignInBox = () => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/auth/mail`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL}/auth/mail`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+          }),
+        }
+      );
 
       if (response.status === 200) router.push("/signin/sent");
       else alert("Error sending email. Please try again.");
@@ -49,8 +52,9 @@ const SignInBox = () => {
         className="absolute h-full w-full object-cover"
       />
       <div className="flex-col absolute flex items-center justify-center font-sans font-light px-10 md:px-15 md:pt-15 pt-10 space-y-6 bg-white rounded-2xl border-2 ">
-        <div className="space-y-0 text-center text-xs sm:text-base">
-          <p >We will send a link to authenticate </p>
+        <div className="text-center text-xs sm:text-sm">
+          <h1 className="font-bold text-[14px] sm:text-xl pb-2">SIGN IN</h1>
+          <p>We will send a link to authenticate </p>
           <p> your account 📩</p>
         </div>
         <form className="flex flex-col space-y-6" onSubmit={handleSubmit}>

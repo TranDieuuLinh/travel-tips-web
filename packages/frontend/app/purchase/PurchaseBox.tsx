@@ -6,7 +6,9 @@ import { urlFor } from "@/sanity/urlFor";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { config } from "dotenv";
-config({quiet:true});
+import { PiSignInFill } from "react-icons/pi";
+import { PiShoppingCartDuotone } from "react-icons/pi";
+config({ quiet: true });
 
 type Props = {
   countries: Country[];
@@ -17,7 +19,6 @@ const PurchaseBox = ({ countries }: Props) => {
   const [countriesDrpDwnList, setCountriesDrpDwnList] = useState<string[]>([]);
   const [dropDown, setDropDown] = useState(false);
   const dropdownMenuRef = React.useRef<HTMLDivElement>(null);
-  const [buttonclick, setbuttonclick] = useState(false);
   const [userId, setuserId] = useState(0);
   const [email, setemail] = useState("");
   const router = useRouter();
@@ -40,10 +41,13 @@ const PurchaseBox = ({ countries }: Props) => {
   useEffect(() => {
     const checklogin = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/login/me`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_APP_URL}/login/me`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (!response.ok) return;
         const result = await response.json();
         if (!result.id || !result.email) return;
@@ -88,18 +92,25 @@ const PurchaseBox = ({ countries }: Props) => {
     setCountriesDrpDwnList(filtered);
   }, [countries, inBasketData, paidcountries]);
 
+  const checkLogin = () => {
+    return router.push("/signin");
+  };
+
   const handleSelect = async (country: string) => {
-    if (userId === 0) return alert("Login Required!");
+    if (userId === 0) return router.push("/signin");
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: userId,
-          cart_slug: country.trim().toLowerCase(),
-          cart_country_name: country,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: userId,
+            cart_slug: country.trim().toLowerCase(),
+            cart_country_name: country,
+          }),
+        }
+      );
       if (!response.ok) throw new Error("Failed to add cart");
 
       setInBasketData((prev) => [...prev, country]);
@@ -111,16 +122,18 @@ const PurchaseBox = ({ countries }: Props) => {
   };
 
   const handleDelete = async (country: string) => {
-    if (userId === 0) return alert("Login Required!");
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: userId,
-          cart_slug: country.trim().toLowerCase(),
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: userId,
+            cart_slug: country.trim().toLowerCase(),
+          }),
+        }
+      );
       if (!response.ok) throw new Error("Failed to delete cart");
 
       setInBasketData((prev) => prev.filter((p) => p !== country));
@@ -134,69 +147,52 @@ const PurchaseBox = ({ countries }: Props) => {
     inBasketData.includes(p.countryName)
   );
 
-  const cartCheck = async () => {
-    if (inBasketData.length <= 0) return alert("Cart is empty!");
-    setbuttonclick(true);
+  const processCheckout = () => {
+    const params = new URLSearchParams({
+      country_slug: inBasketData.map((p) => p.toLowerCase()).join(","),
+      user_id: userId.toString(),
+      quantity: inBasketData.length.toString(),
+      email: email,
+    });
+
+    router.push(`/purchase/payment?${params.toString()}`);
   };
 
-  useEffect(() => {
-    const processCheckout = async () => {
-      if (!buttonclick) return;
-      console.log(userId);
-      console.log(email);
-      if (userId === 0 || email === "") {
-        alert("Login required!");
-        setbuttonclick(false);
-        return;
-      }
-
-      const params = new URLSearchParams({
-        country_slug: inBasketData.map((p) => p.toLowerCase()).join(","),
-        user_id: userId.toString(),
-        quantity: inBasketData.length.toString(),
-        email: email,
-      });
-
-      router.push(`/purchase/payment?${params.toString()}`);
-      setbuttonclick(false);
-    };
-
-    processCheckout();
-  }, [buttonclick, router, inBasketData, userId, email]);
-
   return (
-    <div className="flex flex-col justify-center items-center py-16 px-3 sm:px-5 md:px-10">
-      <h1 className="font-semibold text-center md:py-4 py-2 text-sm sm:text-base md:text-lg">
-        Pick countries to explore
+    <div className="flex flex-col justify-center items-center py-10 px-3 sm:px-5 md:px-10 min-h-screen">
+      <h1 className="font-semibold text-center text-sm sm:text-base md:text-2xl font-serif flex py-4">
+        💫 Choose Countries To Explore
       </h1>
 
       {/* Dropdown */}
-      <div className="w-52 md:w-64 lg:w-72 bg-white border rounded px-6 md:px-8 py-4 md:py-6 space-y-1">
+      <div className="relative w-50 md:w-60 lg:w-65 rounded-2xl space-y-2">
         <p className="text-center text-[9px] sm:text-sm">$2 AUD each country</p>
         <div
           ref={dropdownMenuRef}
-          className="border rounded px-2 py-1 flex justify-between items-center cursor-pointer"
+          className="border rounded-2xl px-3 py-1 flex justify-between items-center cursor-pointer"
           onClick={() =>
             countriesDrpDwnList.length > 0 && setDropDown(!dropDown)
-          } 
+          }
         >
-          <span className="font-extralight text-[8px] sm:text-sm">
-            {countriesDrpDwnList.length > 0
-              ? "Choose country..."
-              : "No more country..."}
+          <span className="font-extralight text-[8px] sm:text-sm ">
+            {countriesDrpDwnList.length > 0 ? (
+              <span className="flex">Choose countries... </span>
+            ) : (
+              "No more country 😵"
+            )}
           </span>
           {countriesDrpDwnList.length > 0 && (
             <span className="ml-2 text-[8px] sm:text-sm">▼</span>
           )}
         </div>
 
-        <div className="bg-gray-100">
+        <div className="bg-gray-100 absolute z-30 w-full rounded">
           {dropDown &&
             countriesDrpDwnList.map((p, index) => (
               <p
                 key={index}
                 onClick={() => handleSelect(p)}
-                className="px-2 py-1 hover:bg-red-100 cursor-pointer text-[8px] sm:text-sm rounded"
+                className="px-3 py-2 hover:bg-red-100 cursor-pointer text-[8px] sm:text-sm "
               >
                 {p}
               </p>
@@ -207,6 +203,18 @@ const PurchaseBox = ({ countries }: Props) => {
       {/* Cart Box */}
       <div className="flex justify-center w-full mt-8 md:px-6">
         <div className="w-full max-w-3xl p-4 sm:p-6 md:p-8 shadow-2xl bg-white rounded-2xl space-y-3">
+          {inBasketData.length === 0 && email && (
+            <div className="justify-center w-full flex flex-col items-center text-base sm:text-base font-extralight space-y-2 py-6">
+              <PiShoppingCartDuotone className="text-[#6D2608]" size={40} />
+              <span>Your Cart Is Empty </span>
+            </div>
+          )}
+          {!email && (
+            <div className="justify-center w-full flex flex-col items-center text-base sm:text-base font-extralight space-y-2 py-6">
+              <PiSignInFill className="text-[#6D2608]" size={40} />
+              <span>Sign in to Purchase </span>
+            </div>
+          )}
           {filtered.map((e) => (
             <div
               key={e.slug}
@@ -241,12 +249,22 @@ const PurchaseBox = ({ countries }: Props) => {
           </div>
 
           <div className="flex justify-center mt-3">
-            <button
-              className="bg-[#6D2608] px-10 sm:px-16 py-2 text-sm sm:text-base text-white rounded-lg"
-              onClick={cartCheck}
-            >
-              Next
-            </button>
+            {email ? (
+              <button
+                className="bg-[#6D2608] px-10 sm:px-16 py-2 text-sm sm:text-base text-white rounded-lg"
+                disabled={inBasketData.length <= 0}
+                onClick={processCheckout}
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                className="bg-[#6D2608] px-10 sm:px-16 py-2 text-sm sm:text-base text-white rounded-lg cursor-pointer"
+                onClick={checkLogin}
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </div>

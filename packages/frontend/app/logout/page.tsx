@@ -3,7 +3,8 @@ import React from "react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { config } from "dotenv";
-config({quiet:true});
+config({ quiet: true });
+import Image from "next/image";
 
 const Page = () => {
   const router = useRouter();
@@ -22,7 +23,18 @@ const Page = () => {
     logoutUser();
   }, [router]);
 
-  return <div>logout page</div>;
+  return (
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50">
+      <div className="w-16 h-16 relative mb-6">
+        <Image src="/icon.png" alt="Logo" fill className="object-contain" />
+      </div>
+
+      <div className="flex items-center space-x-3 text-gray-700 text-base sm:text-lg">
+        <span className="inline-block animate-spin text-3xl">🌀</span>
+        <span>Logging Out...</span>
+      </div>
+    </div>
+  );
 };
 
 export default Page;

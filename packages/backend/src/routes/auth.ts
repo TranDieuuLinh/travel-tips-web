@@ -47,7 +47,7 @@ router.get('/verify', verifyLimiter, async (req, res) => {
             cookieCreatedTime: cookieCreatedTime,
             combine: hashedCombined
         }
-        res.cookie('information', JSON.stringify(cookieInformation), { maxAge: 604800, httpOnly: true, sameSite:'lax' ,secure: process.env.SECURECOOKIE === 'production',});
+        res.cookie('information', JSON.stringify(cookieInformation), { maxAge: 604800000, httpOnly: true, sameSite:'lax' ,secure: process.env.SECURECOOKIE === 'production',});
     }
     await oneTimeLink(decodedURI);
 

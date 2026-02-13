@@ -8,8 +8,6 @@ const __dirname = path.dirname(__filename);
 
 config({ path: path.resolve(__dirname, '../.env') });
 
-console.log('DB_USER:', process.env.DB_USER);
-
 export const pool = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,

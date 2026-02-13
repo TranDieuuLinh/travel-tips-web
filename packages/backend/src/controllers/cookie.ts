@@ -23,10 +23,10 @@ export function validateUsersCookie(cookie:string, userIdURI?:string){
     } catch (error: unknown) {
         return null;
     }
-    const {cookieCreatedTime, combine } = parsed;
-    if (!cookieCreatedTime || !combine || !userIdURI) return null;
+    const {userId, cookieCreatedTime, combine } = parsed;
+    if (!cookieCreatedTime || !combine) return null;
   
-    const hashedCombined = hashCookie(userIdURI, cookieCreatedTime);
+    const hashedCombined = hashCookie(userIdURI? userIdURI:userId, cookieCreatedTime);
 
     if (!validateHashcookie(combine, hashedCombined)) return null;
     return parsed;

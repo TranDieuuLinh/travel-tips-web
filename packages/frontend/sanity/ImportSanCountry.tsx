@@ -6,6 +6,7 @@ export type Country = {
   imageCover: SanityImageSource;
   slug: string;
   highlight: boolean;
+  countryDescription:string
 };
 
 export async function ImportSanCountry (slug?: string) {
@@ -17,7 +18,8 @@ export async function ImportSanCountry (slug?: string) {
             countryName,
             imageCover,
             "slug": slug.current,
-            highlight
+            highlight,
+            countryDescription
           }`;
           params = { slug };
 
@@ -26,7 +28,8 @@ export async function ImportSanCountry (slug?: string) {
             countryName,
             imageCover,
             "slug": slug.current,
-            highlight
+            highlight,
+            countryDescription
           }`;
         }
         return await sanityClient.fetch<Country[]>(query,params);

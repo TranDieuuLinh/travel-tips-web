@@ -10,39 +10,14 @@ config({ quiet: true });
 const Navbar = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [openEditName, setOpenEditName] = useState(false);
   const [dropdownMenu, setdropdownMenu] = useState(false);
-  const [newName, setNewName] = useState("");
   const dropdownMenuRef = React.useRef<HTMLDivElement>(null);
+  const [loading,setloading] = useState(true);
 
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
 
-  const fetchEditName = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_URL}/login/update-name`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            newName: newName,
-            email: email,
-          }),
-        }
-      );
-
-      if (response.status === 200) {
-        setName(newName);
-        setNewName("");
-        setdropdownMenu(false);
-      } else alert("Fail to edit name");
-    } catch (error) {
-      console.error(error);
-      alert("Fail to edit name");
-    }
-  };
+  
 
   const clickOutside = (e: MouseEvent) => {
     if (
@@ -72,7 +47,7 @@ const Navbar = () => {
           }
         );
 
-        if (!response.ok) return;
+        if (!response.ok) return setloading(false);;
 
         const data = await response.json();
 
@@ -82,6 +57,8 @@ const Navbar = () => {
         setEmail(data.email);
       } catch (error) {
         console.error("Fetch threw error:", error);
+      } finally {
+        return setloading(false);
       }
     };
     fetchUserData();
@@ -116,7 +93,7 @@ const Navbar = () => {
         )}
       </div>
 
-      <div className="flex md:space-x-8 space-x-1.5">
+      <div className="flex md:space-x-7 space-x-1.5">
         <div className="hover:text-orange-50">
           {!name && (
             <Link href="/" className={isActive("/") ? "text-neutral-300" : ""}>
@@ -145,44 +122,22 @@ const Navbar = () => {
             <button
               onClick={() => {
                 setdropdownMenu(!dropdownMenu);
-                setOpenEditName(false);
               }}
               className="inline-flex hover:text-orange-50 cursor-pointer"
             >
               {name.trim().toUpperCase()} ▼
             </button>
             {dropdownMenu && (
-              <div className="sm:mt-4 absolute bg-neutral-200 rounded p-1 sm:p-3 sm:w-30 w-16 end-0 flex flex-col md:space-y-4 space-y-2 text-[9px] sm:text-sm">
-                <div
-                  className="text-gray-500 "
-                  onClick={() => setOpenEditName(true)}
-                >
-                  <div className="underline cursor-pointer">
-                    {openEditName && (
-                      <div className="flex flex-col justify-center ">
-                        <form onSubmit={fetchEditName}>
-                          <input
-                            required
-                            value={newName}
-                            onChange={(e) => setNewName(e.target.value)}
-                            placeholder={"New name..."}
-                            type="text"
-                            className="w-full border p-0.5 sm:p-1  text-[8px] sm:text-[13px]"
-                          ></input>
-                          <button
-                            type="submit"
-                            className="w-fit mt-1  text-black md:px-1"
-                          >
-                            Edit
-                          </button>
-                        </form>
-                      </div>
-                    )}
-                    {!openEditName && "Edit Name"}
-                  </div>
-                </div>
+              <div className="sm:mt-4 absolute bg-neutral-200 rounded p-1 sm:p-3 sm:w-30 w-16 end-0 flex flex-col md:space-y-4 space-y-2 text-[9px] sm:text-base">
                 <Link
-                  className="text-red-400 underline"
+                  className="text-gray-500"
+                  onClick={() => setdropdownMenu(false)}
+                  href={{pathname:"/signin/editname", query:{email:email}}}
+                >
+                  Edit Name
+                </Link>
+                <Link
+                  className="text-red-400"
                   href="/logout"
                   onClick={() => setdropdownMenu(false)}
                 >
@@ -192,6 +147,8 @@ const Navbar = () => {
             )}
           </div>
         ) : (
+          loading? 
+          <span className="animate-spin">🌀</span>:
           <Link
             href="/signin"
             className={isActive("/signin") ? "text-neutral-300" : ""}

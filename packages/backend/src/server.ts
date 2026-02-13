@@ -47,7 +47,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
           const country_name_arr = (Array.isArray(country_name)) ? country_name : [country_name]
           const paid_date = Date.now();
           const paymentIntentId = session.payment_intent as string;
-          console.log(user_id , typeof(user_id));
 
           const userEmail = JSON.parse(metadata.customer_email!) || '';
           await Promise.all(
@@ -92,7 +91,6 @@ app.use(express.json());
 app.post('/api/refund', async (req, res) => {
   const { payment_intent_id } = req.body;
   try {
-    console.log(payment_intent_id);
     await stripe.refunds.create({
       payment_intent: payment_intent_id
     });

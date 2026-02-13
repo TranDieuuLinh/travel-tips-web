@@ -3,7 +3,7 @@ import { PortableText } from "next-sanity";
 import { Post } from "../../sanity/ImportSanPost";
 import { urlFor } from "../../sanity/urlFor";
 import Image from "next/image";
-
+import Link from "next/link";
 type Props = {
   posts: Post[];
 };
@@ -13,21 +13,21 @@ const Highlight = ({ posts }: Props) => {
 
   return (
     <div className="w-full px-4 sm:px-6 md:px-12 py-8">
-      {/* Section Title */}
       <h1 className="font-sans text-[10px] sm:text-base md:text-lg font-semibold md:mb-2">
         HIGHLIGHT POST
       </h1>
 
       {fetchPost && (
         <div className="w-full">
-          {/* Post Title */}
+          <Link href={`/countries/china/${fetchPost.slug}`}>
           <h2 className="font-serif text-[#6D2608] font-bold text-base sm:text-xl md:text-2xl lg:text-3xl mb-6">
             {fetchPost.postTitle.toUpperCase()}
           </h2>
+          </Link>
 
           <div>
             <Image
-              src={urlFor(fetchPost.highlightImage).quality(100).url()}
+              src={urlFor(fetchPost.highlightImage).quality(60).url()}
               alt={fetchPost.postTitle}
               width={400}
               height={400}
