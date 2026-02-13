@@ -214,7 +214,7 @@ const PurchaseBox = ({ countries }: Props) => {
             >
               <div className="shrink-0 w-24 md:w-28 lg:w-32 h-20 md:h-28 relative">
                 <Image
-                  src={urlFor(e.imageCover).url()}
+                  src={urlFor(e.imageCover).quality(50).url()}
                   alt={e.countryName}
                   fill
                   className="object-cover rounded-lg"

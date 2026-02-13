@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { urlFor } from "../../sanity/urlFor";
 import { Country } from "../../sanity/ImportSanCountry";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MdPaid } from "react-icons/md";
 import React from "react";
 import { config } from "dotenv";
@@ -29,7 +29,7 @@ const CountriesBox = ({ countries }: Props) => {
     }
   };
 
-  const sorted = [...countries].sort((a, b) => {
+  const sorted = useMemo(() => {return [...countries].sort((a, b) => {
     if (drpdwnType === "paid") {
       const apaid = paidcountries.includes(a.slug) ? 1 : 0;
       const bpaid = paidcountries.includes(b.slug) ? 1 : 0;
@@ -37,7 +37,7 @@ const CountriesBox = ({ countries }: Props) => {
     } else {
       return a.countryName.localeCompare(b.countryName);
     }
-  });
+  })}, [countries, drpdwnType,paidcountries]);
 
   const handleSelect = (p: string) => {
     if (p === "Country Name") {
@@ -114,7 +114,7 @@ const CountriesBox = ({ countries }: Props) => {
             <div className="flex flex-col shrink-0 border rounded-2xl overflow-hidden w-48 sm:w-40 md:w-60 lg:w-80 xl:w-67.5">
               <div className="relative w-full h-30 sm:h-30 md:h-44 lg:h-60 xl:h-50">
                 <Image
-                  src={urlFor(country.imageCover).quality(100).url()}
+                  src={urlFor(country.imageCover).quality(60).url()}
                   alt={country.countryName}
                   fill
                   className="object-cover rounded-t-2xl"

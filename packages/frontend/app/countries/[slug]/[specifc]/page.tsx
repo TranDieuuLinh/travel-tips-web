@@ -7,7 +7,7 @@ type Props = {
     specifc: string;
   };
 };
-export const revalidate = 60;
+export const revalidate = 300;
 
 const Page = async ({ params }: Props) => {
   const { slug, specifc } = await params;

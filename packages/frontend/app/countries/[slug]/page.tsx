@@ -6,7 +6,7 @@ type Props = {
   params: { slug: string };
 };
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export default async function CountryPage({ params }: Props) {
   const { slug } = await params;

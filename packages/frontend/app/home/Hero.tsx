@@ -33,7 +33,6 @@ const Hero = ({ countries }: Props) => {
         </h1>
       </div>
 
-      {/* Countries & More Button */}
       <div className="absolute bottom-5 sm:bottom-6 md:bottom-8 lg:bottom-10 xl:bottom-12 w-full flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 z-10 text-white font-serif">
         {countries?.map((country) => (
           <Link href={`/countries/${country.slug}/`} key={country.slug}>
@@ -46,17 +45,16 @@ const Hero = ({ countries }: Props) => {
                 alt={country.countryName}
                 width={300}
                 height={200}
-                className="rounded-xl object-cover w-full h-20.5 sm:h-27.5 md:h-32.5 lg:h-37.5 xl:h-45"
+                className="rounded-xl object-cover w-full h-20.5 sm:h-27.5 md:h-32.5 lg:h-37.5 xl:h-45 hover:scale"
               />
             </div>
           </Link>
         ))}
 
-        {/* MORE Button */}
         <div className="flex items-center mt-2 sm:mt-0">
           <button
             onClick={navigatetoCountries}
-            className="bg-[#6D2608] hover:bg-[#6d2608c1] text-white font-normal text-[10px] sm:text-sm md:text-sm lg:text-base py-2 px-12 sm:px-5 rounded-full flex items-center justify-center"
+            className="bg-[#6D2608] hover:bg-[#6d260883] text-white font-normal text-[10px] sm:text-sm md:text-sm lg:text-base py-2 px-12 sm:px-5 rounded-full flex items-center justify-center cursor-pointer"
           >
             MORE
             <span className="ml-2 sm:bg-white sm:text-[#6D2608] sm:rounded-full sm:w-5 sm:h-5 flex items-center justify-center">

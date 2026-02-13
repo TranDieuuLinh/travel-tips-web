@@ -44,6 +44,12 @@ pipeline {
                             '''
                         }
 
+                         dir('packages/backend/src') {
+                            sh '''
+                            npm install express
+                            '''
+                        }
+
                         // PM2 restart/start commands
                         sh '''
                         pm2 restart backend || pm2 start packages/backend/src/server.ts --name backend --interpreter ts-node

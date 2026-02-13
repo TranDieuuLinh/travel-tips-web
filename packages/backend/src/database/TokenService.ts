@@ -14,9 +14,16 @@ export function generateMagicLink() {
 }
 
 export async function getTokenExpiryByURI(decodedURI: string) {
-  const tokenExpiryTimeDB = await pool.query(`SELECT token_ended_time FROM token WHERE token_id = $1`, [decodedURI]);
+  const hashtoken = crypto.createHash('sha256').update(decodedURI).digest('base64');
+  const tokenExpiryTimeDB = await pool.query(`SELECT token_ended_time FROM token WHERE token_id = $1`, [hashtoken]);
   const tokenExpiry = tokenExpiryTimeDB.rows[0].token_ended_time;
   return tokenExpiry;
+}
+
+export async function oneTimeLink(decodedURI:string) {
+  const hashtoken = crypto.createHash('sha256').update(decodedURI).digest('base64');
+  const end_time = Date.now() - 600 * 1000;
+  await pool.query(`UPDATE token SET token_ended_time = $1 WHERE token_id = $2`, [end_time,hashtoken]);
 }
 
 export async function delTokenWeekly() {
@@ -42,8 +49,10 @@ export async function addTokenDB(mail: string, token: string) {
 
     const tokenExisted = await pool.query(`SELECT * FROM token WHERE user_id = $1`, [numberUserId]);
     if (tokenExisted.rows.length > 0) await pool.query(`DELETE FROM token WHERE user_id = $1`, [numberUserId]);
+
+    const hashtoken = crypto.createHash('sha256').update(token).digest('base64');
     
-    await pool.query(`INSERT INTO token (token_id, token_created_time, token_ended_time,user_id ) VALUES ($1,$2,$3,$4) RETURNING *`, [token, tokenCreatedTime, tokenEndedTime, numberUserId]);
+    await pool.query(`INSERT INTO token (token_id, token_created_time, token_ended_time,user_id ) VALUES ($1,$2,$3,$4) RETURNING *`, [hashtoken, tokenCreatedTime, tokenEndedTime, numberUserId]);
   } catch (error) {
     console.error(error);
   }

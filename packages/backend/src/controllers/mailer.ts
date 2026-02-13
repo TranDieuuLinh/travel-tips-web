@@ -38,20 +38,18 @@ export async function sendMail(mail: string) {
           border-radius: 5px;
         ">Access Account</a>
         <p style="color: #999; font-size: 12px; margin-top: 20px;">
-          This URL is valid for 10 minutes.
+          This URL is valid for 10 minutes and can only be used once.
         </p>
       </body>
     </html>
   `
 
-    const info = await transporter.sendMail({
+    await transporter.sendMail({
       from: '"Travel With Knowledge" <dieulinh268268@gmail.com>',
       to: mail,
       subject: 'Your Magic Link',
       html,
     });
-
-    console.log("✅ Email sent:", info.messageId);
 
   } catch (err) {
     console.error("❌ Send mail failed:", err);

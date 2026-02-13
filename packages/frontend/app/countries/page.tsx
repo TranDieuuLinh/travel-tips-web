@@ -1,7 +1,7 @@
 import CountriesBox from "./CountriesBox";
 import { ImportSanCountry } from "@/sanity/ImportSanCountry";
 
-export const revalidate = 60; 
+export const revalidate = 300; 
 
 const Page = async () => {
 

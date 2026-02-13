@@ -54,7 +54,7 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
           {/* Image */}
           <div className=" max-w-50 md:max-w-130 lg:w-85">
             <Image
-              src={urlFor(fetchPost.highlightImage).quality(100).url()}
+              src={urlFor(fetchPost.highlightImage).quality(70).url()}
               alt={fetchPost.postTitle}
               width={500}
               height={400}

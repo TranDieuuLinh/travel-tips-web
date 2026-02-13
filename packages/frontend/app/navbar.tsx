@@ -21,14 +21,17 @@ const Navbar = () => {
   const fetchEditName = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/login/update-name`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          newName: newName,
-          email: email,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL}/login/update-name`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            newName: newName,
+            email: email,
+          }),
+        }
+      );
 
       if (response.status === 200) {
         setName(newName);
@@ -61,10 +64,13 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/login/me`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_APP_URL}/login/me`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) return;
 
@@ -82,30 +88,41 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="justify-between items-center top-0 absolute z-5 w-full flex px-3 sm:px-7 py-4 bg-linear-to-b from-black/50 to-black/0 text-white font-semibold font-sans text-[8px] sm:text-[12px] md:text-sm lg:text-[16px]">
+    <nav className="justify-between items-center top-0 absolute z-5 w-full flex px-1 sm:px-7 py-4 bg-linear-to-b from-black/50 to-black/0 text-white font-semibold font-sans text-[9px] md:text-[12px] lg:text-[17px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
       <div className="flex items-center lg:space-x-1">
-        <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-9 md:h-9 lg:w-12 lg:h-12 relative">
-          <Image
-            src="/icon.png"
-            alt="Logo Image"
-            fill
-            className="object-contain"
-             sizes="(max-width: 640px) 100vw, 50vw"
-          />
+        <div className="w-8 h-12 md:w-10 md:h-13 lg:w-13 lg:h-15 relative">
+          <Link href="/">
+            <Image
+              src="/icon.png"
+              alt="Logo Image"
+              fill
+              className="object-contain"
+              sizes="(max-width: 640px) 100vw, 50vw"
+            />
+          </Link>
         </div>
         {!name && <Link href="/">TRAVEL WITH KNOWLEDGE</Link>}
-        {name && <div className="hover:text-orange-50">
-        {name &&  <Link href="/" className={isActive("/") ? "text-neutral-300" : ""}>
-        TRAVEL WITH KNOWLEDGE
-          </Link>}
-        </div>}
+        {name && (
+          <div className="hover:text-orange-50">
+            {name && (
+              <Link
+                href="/"
+                className={isActive("/") ? "text-neutral-300" : ""}
+              >
+                TRAVEL WITH KNOWLEDGE
+              </Link>
+            )}
+          </div>
+        )}
       </div>
 
-      <div className="flex md:space-x-4 space-x-1">
+      <div className="flex md:space-x-8 space-x-1.5">
         <div className="hover:text-orange-50">
-        {!name &&  <Link href="/" className={isActive("/") ? "text-neutral-300" : ""}>
-            HOME
-          </Link>}
+          {!name && (
+            <Link href="/" className={isActive("/") ? "text-neutral-300" : ""}>
+              HOME
+            </Link>
+          )}
         </div>
         <div className="hover:text-orange-50">
           <Link
@@ -132,7 +149,7 @@ const Navbar = () => {
               }}
               className="inline-flex hover:text-orange-50 cursor-pointer"
             >
-             {name.trim().toUpperCase()} ▼
+              {name.trim().toUpperCase()} ▼
             </button>
             {dropdownMenu && (
               <div className="sm:mt-4 absolute bg-neutral-200 rounded p-1 sm:p-3 sm:w-30 w-16 end-0 flex flex-col md:space-y-4 space-y-2 text-[9px] sm:text-sm">

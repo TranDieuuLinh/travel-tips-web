@@ -1,12 +1,14 @@
-import PurchaseBox from './PurchaseBox'
+import PurchaseBox from "./PurchaseBox";
 import { ImportSanCountry } from "@/sanity/ImportSanCountry";
 
-
-const page = async() => {
+export const revalidate = 300;
+const page = async () => {
   const countries = await ImportSanCountry();
   return (
-    <div><PurchaseBox countries = {countries}/></div>
-  )
-}
+    <div>
+      <PurchaseBox countries={countries} />
+    </div>
+  );
+};
 
-export default page
+export default page;

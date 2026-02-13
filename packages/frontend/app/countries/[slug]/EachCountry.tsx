@@ -24,7 +24,7 @@ const EachCountry = ({ countries, posts, slug }: Props) => {
           <div className="flex flex-col shrink-0 border-2 rounded-lg overflow-hidden w-37 sm:w-37.5 md:w-45 lg:w-50">
             <div className="relative w-full h-25.5 md:h-28 lg:h-30">
               <Image
-                src={urlFor(country.imageCover).quality(100).url()}
+                src={urlFor(country.imageCover).quality(70).url()}
                 alt={country.countryName}
                 fill
                 className="object-cover"
