@@ -159,10 +159,12 @@ app.get(`/api/users`, async (req, res) => {
   const user = await pool.query(`SELECT * from users`);
   const token = await pool.query(`SELECT * from token`);
   const paid = await pool.query(`SELECT * from paid_country`);
+  const cart = await pool.query(`SELECT * from cart`);
   const userTable = user.rows;
   const tokenTable = token.rows;
   const paidTable = paid.rows;
-  res.status(200).json({ "user": userTable, "token": tokenTable, "paid": paidTable });
+  const cartTable = cart.rows;
+  res.status(200).json({ "user": userTable, "token": tokenTable, "paid": paidTable, "cart":cartTable });
 });
 
 //logout user by clearing cookie

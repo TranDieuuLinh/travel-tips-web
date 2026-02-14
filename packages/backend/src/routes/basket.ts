@@ -28,7 +28,6 @@ router.post('/cart', async (req, res) => {
       const now = Date.now();
     
       await pool.query(`INSERT INTO cart (cart_slug, cart_country_name, user_id, cart_edit_time) VALUES ($1, $2, $3, $4)`, [cart_slug, cart_country_name, userId, now]);
-  
       return res.status(200).json({ message: 'Cart saved successfully' });
     } catch (error) {
       console.error('Error saving cart:', error);

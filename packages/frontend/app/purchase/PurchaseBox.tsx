@@ -15,8 +15,16 @@ type Props = {
   countries: Country[];
 };
 
+interface DataFetcher<T> {
+  data: T;
+  loaded: boolean;
+}
+
 const PurchaseBox = ({ countries }: Props) => {
-  const [inBasketData, setInBasketData] = useState<string[]>([]);
+  const [inBasketData, setInBasketData] = useState<DataFetcher<string[]>>({
+    data: [],
+    loaded: false,
+  });
   const [countriesDrpDwnList, setCountriesDrpDwnList] = useState<string[]>([]);
   const [dropDown, setDropDown] = useState(false);
   const dropdownMenuRef = React.useRef<HTMLDivElement>(null);
@@ -26,6 +34,8 @@ const PurchaseBox = ({ countries }: Props) => {
   const [paidcountries, setpaidcountries] = useState<string[]>([]);
   const useparams = useSearchParams();
   const countryslug = useparams.get("countryslug");
+  const [autoAddSlug, setAutoAddSlug] = useState<string | null>(countryslug);
+
   const uid = useparams.get("uid");
 
   const clickOutside = (e: MouseEvent) => {
@@ -72,11 +82,11 @@ const PurchaseBox = ({ countries }: Props) => {
         const cartData: { cart?: { cart_country_name: string }[] } =
           await cartRes.json();
 
-        if (cartData.cart && cartData.cart.length > 0) {
-          setInBasketData(cartData.cart.map((c) => c.cart_country_name));
-        } else {
-          setInBasketData([]);
-        }
+        const cart = cartData.cart || [];
+        setInBasketData({
+          data: cart.map((c) => c.cart_country_name),
+          loaded: true,
+        });
       } catch (error) {
         console.error(error);
       }
@@ -89,7 +99,7 @@ const PurchaseBox = ({ countries }: Props) => {
     const filtered = countries
       .filter(
         (p) =>
-          !inBasketData.includes(p.countryName) &&
+          !inBasketData.data.includes(p.countryName) &&
           !paidcountries.includes(p.countryName.toLowerCase())
       )
       .map((e) => e.countryName);
@@ -102,14 +112,12 @@ const PurchaseBox = ({ countries }: Props) => {
   };
 
   useEffect(() => {
-    const fetchCountryMainPsot = async () => {
-      
-    };
+    const fetchCountryMainPsot = async () => {};
     fetchCountryMainPsot();
   }, []);
 
-  const handleSelect = async (country: string, uid: number) => {
-    if (uid === 0) return router.push("/signin");
+  const handleSelect = async (country: string) => {
+    if (userId === 0) return router.push("/signin");
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`,
@@ -117,7 +125,7 @@ const PurchaseBox = ({ countries }: Props) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userId:uid,
+            userId: userId,
             cart_slug: country.trim().toLowerCase(),
             cart_country_name: country,
           }),
@@ -125,13 +133,31 @@ const PurchaseBox = ({ countries }: Props) => {
       );
       if (!response.ok) return alert("Failed to add cart");
 
-      setInBasketData((prev) => [...prev, country]);
+      setInBasketData((prev) => ({ ...prev, data: [...prev.data, country] }));
       setCountriesDrpDwnList((prev) => prev.filter((p) => p !== country));
       setDropDown(false);
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    const importBuyName = async () => {
+      if (!autoAddSlug || userId === 0 || !inBasketData.loaded) return;
+
+      const capitalize = autoAddSlug.replace(
+        /\b\w+/g,
+        (w) => w[0].toUpperCase() + w.slice(1).toLowerCase()
+      );
+
+      // prevent double insert
+      console.log(capitalize, inBasketData);
+      if (inBasketData.data.includes(capitalize)) return;
+      setAutoAddSlug("");
+      await handleSelect(capitalize);
+    };
+    importBuyName();
+  }, [autoAddSlug, userId, inBasketData]);
 
   const handleDelete = async (country: string) => {
     try {
@@ -148,7 +174,10 @@ const PurchaseBox = ({ countries }: Props) => {
       );
       if (!response.ok) return alert("Failed to delete cart");
 
-      setInBasketData((prev) => prev.filter((p) => p !== country));
+      setInBasketData((prev) => ({
+        ...prev,
+        data: prev.data.filter((p) => p !== country),
+      }));
       setCountriesDrpDwnList((prev) => [...prev, country]);
     } catch (error) {
       console.error(error);
@@ -156,14 +185,14 @@ const PurchaseBox = ({ countries }: Props) => {
   };
 
   const filtered = countries.filter((p) =>
-    inBasketData.includes(p.countryName)
+    inBasketData.data.includes(p.countryName)
   );
 
   const processCheckout = () => {
     const params = new URLSearchParams({
-      country_slug: inBasketData.map((p) => p.toLowerCase()).join(","),
+      country_slug: inBasketData.data.map((p) => p.toLowerCase()).join(","),
       user_id: userId.toString(),
-      quantity: inBasketData.length.toString(),
+      quantity: inBasketData.data.length.toString(),
       email: email,
     });
 
@@ -201,7 +230,7 @@ const PurchaseBox = ({ countries }: Props) => {
             countriesDrpDwnList.map((p, index) => (
               <p
                 key={index}
-                onClick={() => handleSelect(p, userId)}
+                onClick={() => handleSelect(p)}
                 className="px-3 py-2 hover:bg-red-100 cursor-pointer text-sm "
               >
                 {p}
@@ -213,7 +242,7 @@ const PurchaseBox = ({ countries }: Props) => {
       {/* Cart Box */}
       <div className="flex justify-center w-full mt-8 md:px-6">
         <div className="w-full max-w-3xl p-4 sm:p-6 md:p-8 shadow sm:shadow-xl bg-white rounded-2xl space-y-3">
-          {inBasketData.length === 0 && email && (
+          {inBasketData.data.length === 0 && email && (
             <div className="justify-center w-full flex flex-col items-center text-base sm:text-base font-extralight space-y-2 py-6">
               <PiShoppingCartDuotone className="text-[#6D2608]" size={40} />
               <span>Your Cart Is Empty </span>
@@ -255,14 +284,14 @@ const PurchaseBox = ({ countries }: Props) => {
           <hr className="my-3" />
 
           <div className="flex justify-between font-extralight text-xs sm:text-sm px-2">
-            Subtotal: <span>$AUD {2 * inBasketData.length}</span>
+            Subtotal: <span>$AUD {2 * inBasketData.data.length}</span>
           </div>
 
           <div className="flex justify-center mt-3">
             {email ? (
               <button
                 className="bg-[#6D2608] px-10 sm:px-16 py-2 text-sm sm:text-base text-white rounded-lg"
-                disabled={inBasketData.length <= 0}
+                disabled={inBasketData.data.length <= 0}
                 onClick={processCheckout}
               >
                 Next
