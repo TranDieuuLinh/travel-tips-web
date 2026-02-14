@@ -119,15 +119,15 @@ const CountriesBox = ({ countries }: Props) => {
         )}
       </div>
 
-      <div className=" flex flex-wrap justify-center px-4 sm:px-8 md:px-13 pt-10 gap-4 sm:gap-6 md:gap-8 font-sans font-bold pb-10">
+      <div className="grid flex-wrap relative justify-center px-4 sm:px-8 md:px-13 pt-10 gap-8 font-sans font-bold pb-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {sorted.map((country) => (
           <Link
             href={`/countries/${country.slug}`}
             key={country.slug}
-            className="shrink-0 w-48 md:w-64 lg:w-80  flex"
+            className="shrink-0 w-full flex"
           >
             <div className="flex flex-col shadow-2xl rounded-2xl overflow-hidden flex-1 ">
-              <div className="relative w-full h-30 sm:h-30 md:h-44 lg:h-60 xl:h-50 ">
+              <div className="relative w-full aspect-3/2 ">
                 <Image
                   src={urlFor(country.imageCover).quality(60).url()}
                   alt={country.countryName}
@@ -136,20 +136,20 @@ const CountriesBox = ({ countries }: Props) => {
                 />
               </div>
               <div className="flex flex-col p-4 flex-1">
-                <div className="flex items-center font-serif text-[#6D2608] font-bold text-base sm:text-xl md:text-2xl lg:text-3xl">
+                <div className="flex items-center font-serif text-[#6D2608] font-bold text-xl md:text-2xl lg:text-3xl">
                   {country.countryName}
                   {paidcountries.includes(country.slug) && (
                     <MdVerified className="text-[#0AB149] ml-2" size={22} />
                   )}
                 </div>
 
-                <p className="font-serif font-light text-[10px] md:text-base mt-2">
+                <p className="font-serif font-light text-base mt-2">
                   {country.countryDescription}
                 </p>
               </div>
               <button
                 onClick={() => <Link href={`/countries/${country.slug}`} />}
-                className="bg-[#6D2608] hover:bg-[#6d260883] text-white font-normal text-[10px] sm:text-sm md:text-sm lg:text-base py-2 px-12 sm:px-5 flex items-center justify-center cursor-pointer"
+                className="bg-[#6D2608] hover:bg-[#6d260883] text-white font-normal text-sm md:text-sm lg:text-base py-2 px-12 sm:px-5 flex items-center justify-center cursor-pointer"
               >
                 READ MORE
                 <span className="ml-2 sm:w-5 sm:h-5 flex items-center justify-center">

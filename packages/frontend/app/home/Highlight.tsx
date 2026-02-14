@@ -20,7 +20,7 @@ const Highlight = ({ posts }: Props) => {
       {fetchPost && (
         <div className="w-full">
           <Link href={`/countries/china/${fetchPost.slug}`}>
-          <h2 className="font-serif text-[#6D2608] font-bold text-base sm:text-xl md:text-2xl lg:text-3xl mb-6">
+          <h2 className="font-serif text-[#6D2608] font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl mb-6">
             {fetchPost.postTitle.toUpperCase()}
           </h2>
           </Link>
@@ -31,9 +31,9 @@ const Highlight = ({ posts }: Props) => {
               alt={fetchPost.postTitle}
               width={400}
               height={400}
-              className="w-40 sm:w-50 md:w-70 lg:w-100 mr-3 mb-2 md:mr-4 md:mb-4  object-cover float-left"
+              className="w-38 sm:w-50 md:w-70 lg:w-100 mr-2 md:mr-4 md:mb-4  object-cover float-left"
             />
-            <span className="font-sans font-light text-[10px] md:text-base xl:text-lg md:leading-relaxed">
+            <span className="font-sans font-light text-[16px] md:text-base lg:text-lg md:leading-relaxed">
               <PortableText value={fetchPost.freeContent} />
             </span>
           </div>

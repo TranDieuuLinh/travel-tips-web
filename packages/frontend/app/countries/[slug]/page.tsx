@@ -16,7 +16,7 @@ export default async function CountryPage({ params }: Props) {
     a.postTitle.localeCompare(b.postTitle)
   );
   return (
-    <div className="py-18">
+    <div className="pt-20">
       <EachCountry countries={countries} posts={sortedPosts} slug={slug} />
     </div>
   );

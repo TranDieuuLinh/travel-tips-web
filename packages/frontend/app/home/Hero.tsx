@@ -32,7 +32,7 @@ const Hero = ({ countries }: Props) => {
         </h1>
       </div>
 
-      <div className="absolute bottom-5 sm:bottom-6 md:bottom-8 lg:bottom-10 xl:bottom-12 w-full flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 z-10 text-white font-serif">
+      <div className="absolute bottom-5 sm:bottom-6 md:bottom-8 lg:bottom-10 xl:bottom-12 w-full flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-2 sm:px-4 text-white font-serif">
         {countries?.map((country) => (
           <Link href={`/countries/${country.slug}/`} key={country.slug}>
             <div className="flex flex-col items-end space-y-1 shrink-0 w-32.5 sm:w-35 md:w-40 lg:w-45 xl:w-50">

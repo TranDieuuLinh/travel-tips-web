@@ -6,7 +6,7 @@ import { PortableText } from "next-sanity";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { config } from "dotenv";
-config({quiet:true});
+config({ quiet: true });
 
 type Props = {
   countrySlug: string;
@@ -19,19 +19,29 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
   const [userId, setUserId] = useState(0);
   const router = useRouter();
   const movetoPayment = () => {
-    router.push("/purchase");
+    const countryslug = encodeURIComponent(countrySlug);
+    const encuserId = encodeURIComponent(userId)
+
+    const url = userId > 0 ? `/purchase?countryslug=${countryslug}&uid=${encuserId}` : "/purchase";
+
+    router.push(url);
   };
 
   useEffect(() => {
     const checklogin = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/login/me`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_APP_URL}/login/me`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (!response.ok) return;
         const result = await response.json();
         if (!result.id || !result.email) return;
+
+        setUserId(result.id);
 
         const paidcountryRes = await fetch(
           `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
@@ -69,14 +79,20 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
           </h2>
 
           {/* Free Content */}
-          <div className="font-sans tracking-normal text-xs sm:text-base md:text-lg lg:text-xl text-left">
-            <PortableText value={fetchPost.freeContent} components={myPortableTextComponents}/>
+          <div className="font-sans tracking-normal text-base md:text-lg lg:text-xl text-left">
+            <PortableText
+              value={fetchPost.freeContent}
+              components={myPortableTextComponents}
+            />
           </div>
 
           {/* Paid Content */}
           {paid && (
-            <div className="font-sans tracking-normal text-xs sm:text-base md:text-lg lg:text-xl text-left pt-2">
-              <PortableText value={fetchPost.content} components={myPortableTextComponents}/>
+            <div className="font-sans tracking-normal text-base md:text-lg lg:text-xl text-left pt-2">
+              <PortableText
+                value={fetchPost.content}
+                components={myPortableTextComponents}
+              />
             </div>
           )}
         </div>

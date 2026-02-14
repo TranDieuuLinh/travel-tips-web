@@ -9,6 +9,7 @@ import { config } from "dotenv";
 import { PiSignInFill } from "react-icons/pi";
 import { PiShoppingCartDuotone } from "react-icons/pi";
 config({ quiet: true });
+import { useSearchParams } from "next/navigation";
 
 type Props = {
   countries: Country[];
@@ -23,6 +24,9 @@ const PurchaseBox = ({ countries }: Props) => {
   const [email, setemail] = useState("");
   const router = useRouter();
   const [paidcountries, setpaidcountries] = useState<string[]>([]);
+  const useparams = useSearchParams();
+  const countryslug = useparams.get("countryslug");
+  const uid = useparams.get("uid");
 
   const clickOutside = (e: MouseEvent) => {
     if (
@@ -89,6 +93,7 @@ const PurchaseBox = ({ countries }: Props) => {
           !paidcountries.includes(p.countryName.toLowerCase())
       )
       .map((e) => e.countryName);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCountriesDrpDwnList(filtered);
   }, [countries, inBasketData, paidcountries]);
 
@@ -96,8 +101,15 @@ const PurchaseBox = ({ countries }: Props) => {
     return router.push("/signin");
   };
 
-  const handleSelect = async (country: string) => {
-    if (userId === 0) return router.push("/signin");
+  useEffect(() => {
+    const fetchCountryMainPsot = async () => {
+      
+    };
+    fetchCountryMainPsot();
+  }, []);
+
+  const handleSelect = async (country: string, uid: number) => {
+    if (uid === 0) return router.push("/signin");
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`,
@@ -105,13 +117,13 @@ const PurchaseBox = ({ countries }: Props) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userId: userId,
+            userId:uid,
             cart_slug: country.trim().toLowerCase(),
             cart_country_name: country,
           }),
         }
       );
-      if (!response.ok) throw new Error("Failed to add cart");
+      if (!response.ok) return alert("Failed to add cart");
 
       setInBasketData((prev) => [...prev, country]);
       setCountriesDrpDwnList((prev) => prev.filter((p) => p !== country));
@@ -134,7 +146,7 @@ const PurchaseBox = ({ countries }: Props) => {
           }),
         }
       );
-      if (!response.ok) throw new Error("Failed to delete cart");
+      if (!response.ok) return alert("Failed to delete cart");
 
       setInBasketData((prev) => prev.filter((p) => p !== country));
       setCountriesDrpDwnList((prev) => [...prev, country]);
@@ -160,30 +172,28 @@ const PurchaseBox = ({ countries }: Props) => {
 
   return (
     <div className="flex flex-col justify-center items-center py-10 px-3 sm:px-5 md:px-10 min-h-screen">
-      <h1 className="font-semibold text-center text-sm sm:text-base md:text-2xl font-serif flex py-4">
+      <h1 className="font-semibold text-center text-[18px] md:text-2xl font-serif flex py-1 sm:py-4">
         💫 Choose Countries To Explore
       </h1>
 
       {/* Dropdown */}
       <div className="relative w-50 md:w-60 lg:w-65 rounded-2xl space-y-2">
-        <p className="text-center text-[9px] sm:text-sm">$2 AUD each country</p>
+        <p className="text-center text-xs sm:text-sm">$2 AUD each country</p>
         <div
           ref={dropdownMenuRef}
-          className="border rounded-2xl px-3 py-1 flex justify-between items-center cursor-pointer"
+          className="border rounded-2xl font-extralight text-sm px-3 py-1 flex justify-between items-center cursor-pointer"
           onClick={() =>
             countriesDrpDwnList.length > 0 && setDropDown(!dropDown)
           }
         >
-          <span className="font-extralight text-[8px] sm:text-sm ">
+          <span>
             {countriesDrpDwnList.length > 0 ? (
               <span className="flex">Choose countries... </span>
             ) : (
               "No more country 😵"
             )}
           </span>
-          {countriesDrpDwnList.length > 0 && (
-            <span className="ml-2 text-[8px] sm:text-sm">▼</span>
-          )}
+          {countriesDrpDwnList.length > 0 && <span className="ml-2">▼</span>}
         </div>
 
         <div className="bg-gray-100 absolute z-30 w-full rounded">
@@ -191,8 +201,8 @@ const PurchaseBox = ({ countries }: Props) => {
             countriesDrpDwnList.map((p, index) => (
               <p
                 key={index}
-                onClick={() => handleSelect(p)}
-                className="px-3 py-2 hover:bg-red-100 cursor-pointer text-[8px] sm:text-sm "
+                onClick={() => handleSelect(p, userId)}
+                className="px-3 py-2 hover:bg-red-100 cursor-pointer text-sm "
               >
                 {p}
               </p>
@@ -202,7 +212,7 @@ const PurchaseBox = ({ countries }: Props) => {
 
       {/* Cart Box */}
       <div className="flex justify-center w-full mt-8 md:px-6">
-        <div className="w-full max-w-3xl p-4 sm:p-6 md:p-8 shadow-2xl bg-white rounded-2xl space-y-3">
+        <div className="w-full max-w-3xl p-4 sm:p-6 md:p-8 shadow sm:shadow-xl bg-white rounded-2xl space-y-3">
           {inBasketData.length === 0 && email && (
             <div className="justify-center w-full flex flex-col items-center text-base sm:text-base font-extralight space-y-2 py-6">
               <PiShoppingCartDuotone className="text-[#6D2608]" size={40} />
