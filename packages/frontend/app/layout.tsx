@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NextTopLoader color="#008BFF" height={4} />
+        <NextTopLoader color="#6D2608" height={4} />
         <Navbar />
         <Suspense
           fallback={

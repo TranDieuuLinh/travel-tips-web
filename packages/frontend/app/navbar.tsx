@@ -73,7 +73,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="fixed top-0 z-5 w-full bg-linear-to-b from-black/50 to-black/0 text-white font-sans">
+    <nav className="fixed top-0 z-50 w-full bg-linear-to-b from-black/50 to-black/0 text-white font-sans">
       <div className="flex items-center justify-between px-3 sm:px-7 py-4 font-semibold">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-12 md:w-10 md:h-13 relative">
@@ -87,10 +87,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <Link
-            href="/"
-            className="font-semibold text-sm lg:text-[17px]"
-          >
+          <Link href="/" className="font-semibold text-sm lg:text-[17px]">
             TRAVEL WITH KNOWLEDGE
           </Link>
         </div>
@@ -162,57 +159,58 @@ const Navbar = () => {
           ☰
         </button>
       </div>
-
-      {/* Mobile Menu */}
-      {mobileMenu && (
-        <div className="md:hidden bg-linear-to-b from-black/0 to-black/30 backdrop-blur flex flex-col items-center space-y-4 py-6 text-sm z-50">
-          {name && (
-            <button className="hover:text-orange-50">
-              HEY, {name.toUpperCase()} 👋
-            </button>
-          )}
-          {navRight.map((p) => (
-            <Link
-              href={p.path}
-              key={p.path}
-              onClick={() => setMobileMenu(false)}
-              className="hover:text-orange-50"
-            >
-              {p.name}
-            </Link>
-          ))}
-
-          {name ? (
-            <>
+      <div className="relative">
+        {/* Mobile Menu */}
+        {mobileMenu && (
+          <div className="md:hidden bg-linear-to-b from-black/0 to-black/30 backdrop-blur flex flex-col items-center space-y-4 py-6 text-sm w-full">
+            {name && (
+              <button className="hover:text-orange-50">
+                HEY, {name.toUpperCase()} 👋
+              </button>
+            )}
+            {navRight.map((p) => (
               <Link
-                href={{
-                  pathname: "/signin/editname",
-                  query: { email },
-                }}
+                href={p.path}
+                key={p.path}
                 onClick={() => setMobileMenu(false)}
+                className="hover:text-orange-50"
               >
-                EDIT NAME
+                {p.name}
               </Link>
+            ))}
 
+            {name ? (
+              <>
+                <Link
+                  href={{
+                    pathname: "/signin/editname",
+                    query: { email },
+                  }}
+                  onClick={() => setMobileMenu(false)}
+                >
+                  EDIT NAME
+                </Link>
+
+                <Link
+                  href="/logout"
+                  onClick={() => setMobileMenu(false)}
+                  className="text-red-300"
+                >
+                  LOG OUT
+                </Link>
+              </>
+            ) : (
               <Link
-                href="/logout"
+                href="/signin"
                 onClick={() => setMobileMenu(false)}
-                className="text-red-300"
+                className="hover:text-orange-50"
               >
-                LOG OUT
+                SIGN IN
               </Link>
-            </>
-          ) : (
-            <Link
-              href="/signin"
-              onClick={() => setMobileMenu(false)}
-              className="hover:text-orange-50"
-            >
-              SIGN IN
-            </Link>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
+      </div>
     </nav>
   );
 };

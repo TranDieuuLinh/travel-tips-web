@@ -1,6 +1,11 @@
 import Image from "next/image";
+import { WhoData } from "@/sanity/ImportSanWho";
 
-const Who = () => {
+type Props ={
+  whopost: WhoData
+}
+
+const Who = ({whopost}:Props) => {
   return (
     <div className="bg-[#FBF8F2] px-4 py-5 md:p-10 justify-between items-center flex flex-row">
       <div className="w-1/2 justify-center flex">
@@ -9,10 +14,10 @@ const Who = () => {
       <div className="w-1/2 justify-center flex flex-col md:pe-4">
         <h2 className="font-serif text-[#6D2608] font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl pb-2">
           {" "}
-          WHO ARE WE?
+          {whopost.whoTitle}
         </h2>
         <span className="font-sans font-light text-sm md:text-base xl:text-lg flex lg:leading-relaxed ">
-          We ....
+          {whopost.whoContent}
         </span>
       </div>
     </div>
