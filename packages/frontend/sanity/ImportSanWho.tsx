@@ -1,8 +1,9 @@
+import { PortableTextBlock } from "next-sanity";
 import { sanityClient } from "./client";
 
 export type WhoData = {
   whoTitle: string;
-  whoContent: string;
+  whoContent: PortableTextBlock;
 };
 
 export async function ImportSanWho() {

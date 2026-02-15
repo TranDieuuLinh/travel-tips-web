@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { WhoData } from "@/sanity/ImportSanWho";
+import { PortableText } from "next-sanity";
 
 type Props ={
   whopost: WhoData
@@ -16,8 +17,8 @@ const Who = ({whopost}:Props) => {
           {" "}
           {whopost.whoTitle}
         </h2>
-        <span className="font-sans font-light text-sm md:text-base xl:text-lg flex lg:leading-relaxed ">
-          {whopost.whoContent}
+        <span className=" flex-col font-sans font-light text-sm md:text-base xl:text-lg flex lg:leading-relaxed ">
+          <PortableText value={whopost.whoContent}></PortableText>
         </span>
       </div>
     </div>

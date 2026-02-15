@@ -13,7 +13,8 @@ export const who = defineType({
         defineField({
             name: 'whoContent',
             title: 'Who Content',
-            type:'string'
+            type: 'array',
+            of: [{ type: 'block' }],
         }), 
     ]
 })
