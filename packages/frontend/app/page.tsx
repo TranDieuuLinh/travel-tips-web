@@ -4,7 +4,7 @@ import Highlight from "./home/Highlight.tsx";
 import { HighlightCountries } from "@/sanity/ImportSanCountryHighlight.tsx";
 import { ImportSanPost } from "@/sanity/ImportSanPost.tsx";
 import { ImportSanWho } from "@/sanity/ImportSanWho.tsx";
-export const revalidate = 300;
+export const revalidate = 60;
 
 export default async function page() {
   const highlightcountries = await HighlightCountries();
