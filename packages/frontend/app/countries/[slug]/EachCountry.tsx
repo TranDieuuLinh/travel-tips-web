@@ -43,7 +43,6 @@ const EachCountry = ({ countries, posts, slug }: Props) => {
           </div>
         )}
       </div>
-      <div className="hidden md:block w-[1px] bg-gray-500 " />
       <div className="flex md:w-1/2 flex-col font-sans rounded-lg sm:px-0 py-3">
         <div className="lg:px-8 mx-6 md:mx-0 py-4">
           {!posts || posts.length === 0 ? (
