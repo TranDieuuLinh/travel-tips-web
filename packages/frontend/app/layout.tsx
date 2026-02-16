@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     { url: "/icon.png", sizes: "32x32", type: "image/png" },
     { url: "/icon.png", sizes: "64x64", type: "image/png" },
   ],
+  metadataBase: new URL("https://travelknowled.ge"),
 };
 
 export default function RootLayout({
