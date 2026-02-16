@@ -61,7 +61,7 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
   return (
     <>
       {fetchPost && (
-        <div className="flex flex-col items-center px-4 sm:px-6 md:px-12 lg:px-80 pb-18 md:pt-24  sm:py-12 gap-6">
+        <div className="mx-auto max-w-[1500px] flex flex-col items-center px-4 sm:px-6 md:px-12 lg:px-80 pb-18 md:pt-24  sm:py-12 gap-6">
           {/* Image */}
           <div className=" max-w-50 md:max-w-130 lg:w-85">
             <Image

@@ -51,27 +51,26 @@ const EachCountry = ({ countries, posts, slug }: Props) => {
             </div>
           ) : (
             posts.map((p) => (
-              <div key={p.slug} className="w-full pb-2">
+              <div key={p.slug} className="w-full pb-4">
                 <Link href={`/countries/${countrySlug}/${p.slug}`}>
-                  <div className="md:ml-2">
-                    {/* Image */}
+                  <div className="md:flex md:items-start">
                     <div
-                      className="float-left w-1/2 mr-3 lg:mb-2  relative aspect-8/7 md:aspect-5/4 lg:aspect-9/8"
+                      className="relative w-full md:w-[58%] lg:w-1/2 h-0"
+                      style={{ paddingBottom: "56.25%" }}
                     >
                       <Image
                         src={urlFor(p.highlightImage).quality(100).url()}
                         alt={p.postTitle}
                         fill
-                        className="object-cover"
+                        className="object-cover rounded-md"
                       />
                     </div>
 
-                    {/* Text */}
-                    <div className="space-y-2 pb-4">
+                    {/* Post Text */}
+                    <div className="mt-2 md:mt-0 md:ml-4 md:w-[55%] lg:w-[50%] space-y-2">
                       <h1 className="font-serif text-[#6D2608] text-base md:text-lg lg:text-xl">
                         {p.postTitle.toUpperCase()}
                       </h1>
-
                       <div className="font-sans font-extralight text-sm lg:text-base">
                         <PortableText value={p.previewContent} />
                       </div>
