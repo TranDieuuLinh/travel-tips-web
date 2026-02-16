@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: countries[0].countryDescription,
     openGraph: {
       type: "article",
+      url: `https://travelknowled.ge/countries/${countries[0].slug}`,
       images: [
         {
           url: countryImage,

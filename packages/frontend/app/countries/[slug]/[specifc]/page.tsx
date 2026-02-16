@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { urlFor } from "@/sanity/urlFor";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { specifc } = await params;
+  const { specifc,slug } = await params;
   const posts = await ImportSanPost(specifc.trim().toLowerCase());
   const fetchPost = posts[0];
   const images = fetchPost.highlightImage
@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: fetchPost.previewContent,
     openGraph: {
       type: "article",
+      url: `https://travelknowled.ge/countries/${slug}/${fetchPost.slug}`,
       images: [
         {
           url: images,
