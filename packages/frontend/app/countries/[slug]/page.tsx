@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const countryImage = countries[0].imageCover
     ? urlFor(countries[0].imageCover).url()
-    : "/SignInBg.png";
+    : "https://travelknowled.ge/SignInBg.png";
 
   return {
     title: countries[0].countryName,
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       images: [
         {
-          url: countryImage,
+          url: "https://travelknowled.ge/SignInBg.png",
           width: 1200,
           height: 630,
           alt: countries[0].countryName,
