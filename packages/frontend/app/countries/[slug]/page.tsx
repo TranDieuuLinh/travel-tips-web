@@ -4,12 +4,13 @@ import { ImportSanPost } from "@/sanity/ImportSanPost";
 import type { Metadata } from "next";
 import { urlFor } from "@/sanity/urlFor";
 
-export async function generateMetadata(
-  { params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const countries = await ImportSanCountry(slug.trim().toLowerCase());
 
-  const countryImage = urlFor(countries[0].imageCover).url();
+  const countryImage = countries[0].imageCover
+    ? urlFor(countries[0].imageCover).url()
+    : "/SignInBg.png";
 
   return {
     title: countries[0].countryName,
@@ -24,7 +25,7 @@ export async function generateMetadata(
           alt: countries[0].countryName,
         },
       ],
-    },    
+    },
   };
 }
 
