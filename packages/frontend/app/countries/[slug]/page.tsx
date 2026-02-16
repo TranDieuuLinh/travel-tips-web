@@ -5,20 +5,26 @@ import type { Metadata } from "next";
 import { urlFor } from "@/sanity/urlFor";
 
 export async function generateMetadata(
-  { params }: Props,
-): Promise<Metadata> {
+  { params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const countries = await ImportSanCountry(slug.trim().toLowerCase());
-  const countryImage = countries[0]?.imageCover
-    ? urlFor(countries[0].imageCover).width(1200).height(630).url()
-    : "";
+
+  const countryImage = urlFor(countries[0].imageCover).url();
 
   return {
     title: countries[0].countryName,
     description: countries[0].countryDescription,
     openGraph: {
-      images: [countryImage],
-    },
+      type: "article",
+      images: [
+        {
+          url: countryImage,
+          width: 1200,
+          height: 630,
+          alt: countries[0].countryName,
+        },
+      ],
+    },    
   };
 }
 

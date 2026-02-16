@@ -1,25 +1,29 @@
 import { ImportSanPost } from "@/sanity/ImportSanPost";
 import MainCountry from "./MainCountry";
-import type { Metadata } from 'next'
+import type { Metadata } from "next";
 import { urlFor } from "@/sanity/urlFor";
 
-
-export async function generateMetadata(
-  { params }: Props,
-): Promise<Metadata> {
-
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { specifc } = await params;
   const posts = await ImportSanPost(specifc.trim().toLowerCase());
-  const fetchPost = posts[0]; 
+  const fetchPost = posts[0];
   const images = urlFor(fetchPost.highlightImage).width(1200).height(630).url();
 
   return {
     title: fetchPost.postTitle,
-    description:  fetchPost.previewContent,
-    openGraph:{
-      images:images
-    }
-  }
+    description: fetchPost.previewContent,
+    openGraph: {
+      type: "article",
+      images: [
+        {
+          url: images,
+          width: 1200,
+          height: 630,
+          alt: fetchPost.postTitle,
+        },
+      ],
+    },
+  };
 }
 
 type Props = {

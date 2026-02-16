@@ -16,6 +16,7 @@ const EachCountry = ({ countries, posts, slug }: Props) => {
   const countrySlug = slug;
   const country = countries[0];
 
+
   return (
     <div className="md:flex md:px-10">
       <div className="flex md:w-1/2 justify-center font-sans font-bold shadow py-6">
@@ -35,6 +36,7 @@ const EachCountry = ({ countries, posts, slug }: Props) => {
             </div>
             <p className="text-center font-serif text-[#6D2608] font-bold text-xl md:text-2xl lg:text-4xl">
               {country.countryName.toUpperCase()}
+              {urlFor(countries[0].imageCover).width(1200).height(630).url()}
             </p>
             <p className=" font-light text-sm text-center md:text-left md:text-base mt-2 md:px-4">
               {country.countryDescription}
