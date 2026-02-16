@@ -4,7 +4,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "georgia", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Bodoni Moda SC";
 }
 

@@ -8,7 +8,7 @@ type Props ={
 
 const Who = ({whopost}:Props) => {
   return (
-    <div className="bg-[#FBF8F2] px-4 py-5 md:p-14 justify-between items-center flex flex-col md:flex-row">
+    <div className="bg-[#FBF8F2] px-4 py-5 md:p-14 md:px-35 justify-between items-center flex flex-col md:flex-row">
       <div className="md:w-1/2 justify-center flex">
         <Image src="/WhoPic.png" alt="Who Are We Picture" width={200} height={240} priority className="w-26 h-26.5 sm:w-36.5 sm:h-34.5 lg:h-37.5 xl:h-52 xl:w-50"/>
       </div>
