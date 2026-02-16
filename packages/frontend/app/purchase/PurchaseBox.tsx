@@ -37,8 +37,6 @@ const PurchaseBox = ({ countries }: Props) => {
   const countryslug = useparams.get("countryslug");
   const [autoAddSlug, setAutoAddSlug] = useState<string | null>(countryslug);
 
-  const uid = useparams.get("uid");
-
   const clickOutside = (e: MouseEvent) => {
     if (
       dropdownMenuRef.current &&
