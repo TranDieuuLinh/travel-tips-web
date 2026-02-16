@@ -200,7 +200,7 @@ const PurchaseBox = ({ countries }: Props) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center py-10 px-3 sm:px-5 md:px-10 min-h-screen">
+    <div className="flex flex-col justify-center items-center pb-10 pt-24 px-3 sm:px-5 md:px-10 min-h-screen">
       <h1 className="font-semibold text-center text-[18px] md:text-2xl font-serif flex py-1 sm:py-4">
         💫 Choose Countries To Explore
       </h1>
@@ -219,7 +219,7 @@ const PurchaseBox = ({ countries }: Props) => {
             {countriesDrpDwnList.length > 0 ? (
               <span className="flex">Choose countries... </span>
             ) : (
-              "No more country 😵"
+              "No more countries 😵"
             )}
           </span>
           {countriesDrpDwnList.length > 0 && <span className="ml-2">▼</span>}

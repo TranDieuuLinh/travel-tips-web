@@ -1,8 +1,6 @@
 import { SanityImageSource } from "@sanity/image-url";
 import { sanityClient } from "./client";
 import { PortableTextBlock, PortableTextReactComponents } from "next-sanity";
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'; 
-import { nightOwl } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 
 import Image from "next/image";

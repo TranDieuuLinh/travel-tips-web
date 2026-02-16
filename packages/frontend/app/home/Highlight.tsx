@@ -4,6 +4,7 @@ import { Post } from "../../sanity/ImportSanPost";
 import { urlFor } from "../../sanity/urlFor";
 import Image from "next/image";
 import Link from "next/link";
+import { myPortableTextComponents } from "../../sanity/ImportSanPost";
 type Props = {
   posts: Post[];
 };
@@ -34,7 +35,7 @@ const Highlight = ({ posts }: Props) => {
               className="w-38 sm:w-50 md:w-70 lg:w-100 mr-2 md:mr-4 md:mb-4  object-cover float-left"
             />
             <span className="font-sans font-light text-[16px] md:text-base lg:text-lg md:leading-relaxed">
-              <PortableText value={fetchPost.freeContent} />
+              <PortableText value={fetchPost.freeContent} components={myPortableTextComponents}/>
             </span>
           </div>
         </div>
