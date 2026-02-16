@@ -52,34 +52,32 @@ const EachCountry = ({ countries, posts, slug }: Props) => {
           ) : (
             posts.map((p) => (
               <div key={p.slug} className="w-full pb-2">
-                <div className="md:ml-2">
-                  {/* Image */}
-                  <div
-                    className="float-left w-1/2 mr-3 mb-2 relative"
-                    style={{ aspectRatio: "16/9" }}
-                  >
-                    <Image
-                      src={urlFor(p.highlightImage).quality(100).url()}
-                      alt={p.postTitle}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+                <Link href={`/countries/${countrySlug}/${p.slug}`}>
+                  <div className="md:ml-2">
+                    {/* Image */}
+                    <div
+                      className="float-left w-1/2 mr-3 lg:mb-2  relative aspect-8/7 md:aspect-5/4 lg:aspect-9/8"
+                    >
+                      <Image
+                        src={urlFor(p.highlightImage).quality(100).url()}
+                        alt={p.postTitle}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
 
-                  {/* Text */}
-                  <div className="space-y-2 pb-4">
-                    <Link href={`/countries/${countrySlug}/${p.slug}`}>
-                      <h1 className="font-serif text-[#6D2608] text-[13px] md:text-base lg:text-xl">
+                    {/* Text */}
+                    <div className="space-y-2 pb-4">
+                      <h1 className="font-serif text-[#6D2608] text-base md:text-lg lg:text-xl">
                         {p.postTitle.toUpperCase()}
                       </h1>
-                    </Link>
 
-                    <div className="font-sans font-extralight text-sm lg:text-base">
-                      <PortableText value={p.previewContent} />
+                      <div className="font-sans font-extralight text-sm lg:text-base">
+                        <PortableText value={p.previewContent} />
+                      </div>
                     </div>
                   </div>
-                </div>
-
+                </Link>
               </div>
             ))
           )}

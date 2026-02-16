@@ -19,6 +19,7 @@ const CountriesBox = ({ countries }: Props) => {
   const dropdownMenuRef = React.useRef<HTMLDivElement>(null);
   const countriesDrpDwnList = ["Country Name", "Paid Countries"];
   const [drpdwnType, setdrpdwntype] = useState<"name" | "paid">("name");
+  const [userId, setUserId] = useState(0);
 
   const clickOutside = (e: MouseEvent) => {
     if (
@@ -71,6 +72,7 @@ const CountriesBox = ({ countries }: Props) => {
         const paidcountryRes = await fetch(
           `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
         );
+        setUserId(result.id);
         if (!paidcountryRes.ok) return;
         const paidcountrydata = await paidcountryRes.json();
         setpaidcountries(paidcountrydata.paidcountries);
@@ -87,33 +89,34 @@ const CountriesBox = ({ countries }: Props) => {
         <h2 className="font-serif text-center text-[#6D2608] font-bold text-xl md:text-2xl lg:text-3xl pb-2">
           COUNTRIES
         </h2>
-
-        <div className="relative rounded w-50 pt-2">
-          <div
-            ref={dropdownMenuRef}
-            className="border rounded-2xl px-2 py-1 flex justify-between items-center cursor-pointer bg-white"
-            onClick={() => setDropDown(!dropDown)}
-          >
-            <div className="flex justify-between w-full text-xs sm:text-base space-x-2 font-light">
-              <span>Sort By</span>
-              <span>⇅</span>
+        {userId > 0 && (
+          <div className="relative rounded w-50 pt-2">
+            <div
+              ref={dropdownMenuRef}
+              className="border rounded-2xl px-2 py-1 flex justify-between items-center cursor-pointer bg-white"
+              onClick={() => setDropDown(!dropDown)}
+            >
+              <div className="flex justify-between w-full text-xs sm:text-base space-x-2 font-light">
+                <span>Sort By</span>
+                <span>⇅</span>
+              </div>
             </div>
+
+            {dropDown && (
+              <div className="absolute mt-1 bg-gray-100 w-full rounded-lg overflow-hidden">
+                {countriesDrpDwnList.map((p, index) => (
+                  <p
+                    key={index}
+                    onClick={() => handleSelect(p)}
+                    className="px-2 py-2 hover:bg-red-100 cursor-pointer text-sm"
+                  >
+                    {p}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
-
-          {dropDown && (
-            <div className="absolute mt-1 bg-gray-100 w-full rounded-lg overflow-hidden">
-              {countriesDrpDwnList.map((p, index) => (
-                <p
-                  key={index}
-                  onClick={() => handleSelect(p)}
-                  className="px-2 py-2 hover:bg-red-100 cursor-pointer text-sm"
-                >
-                  {p}
-                </p>
-              ))}
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       <div className="grid flex-wrap relative justify-center px-4 sm:px-8 md:px-13 pt-10 gap-8 font-sans font-bold pb-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

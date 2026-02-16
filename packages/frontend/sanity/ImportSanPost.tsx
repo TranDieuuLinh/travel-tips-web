@@ -28,13 +28,13 @@ export const myPortableTextComponents: Partial<PortableTextReactComponents> = {
       </h1>
     ),
     h2: ({ children }) => (
-      <h2 className="text-lg sm:text-xl font-bold text-left">{children}</h2>
+      <h2 className="text-lg sm:text-xl font-bold text-left pt-2">{children}</h2>
     ),
     h3: ({ children }) => (
-      <h3 className="text-base sm:text-lg font-bold text-left">{children}</h3>
+      <h3 className="text-lg sm:text-lg font-bold text-left pt-2">{children}</h3>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-gray-400 border-l px-2  italic font-extralight tracking-tight text-heading text-xs sm:text-base">
+      <blockquote className="border-l-gray-400 border-l p-2 font-extralight tracking-tight text-heading text-base">
         {children}
       </blockquote>
     ),
@@ -66,12 +66,12 @@ export const myPortableTextComponents: Partial<PortableTextReactComponents> = {
 
   types: {
     image: ({ value }) => (
-      <div className="flex justify-center my-4">
+      <div className="flex justify-center my-4" >
         <Image
           src={urlFor(value).quality(100).url()}
-          width={300}
-          height={300}
-          style={{ width: "320", height: "350" }}
+          width={500}
+          height={500}
+          style={{ width: "500", height: "500" }}
           alt=""
         />
       </div>

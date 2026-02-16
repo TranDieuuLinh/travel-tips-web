@@ -13,7 +13,7 @@ const Highlight = ({ posts }: Props) => {
   const fetchPost = posts[0];
 
   return (
-    <div className="w-full px-4 sm:px-6 md:px-12 py-8">
+    <div className="w-full px-4 sm:px-6 md:px-12 lg:px-80 py-8">
       <h1 className="font-sans text-[10px] sm:text-base md:text-lg font-semibold md:mb-2">
         HIGHLIGHT POST
       </h1>
@@ -32,9 +32,9 @@ const Highlight = ({ posts }: Props) => {
               alt={fetchPost.postTitle}
               width={400}
               height={400}
-              className="w-38 sm:w-50 md:w-70 lg:w-100 mr-2 md:mr-4 md:mb-4  object-cover float-left"
+              className="w-38 sm:w-50 md:w-70 lg:w-90 mr-2 md:mr-4 md:mb-4  object-cover float-left"
             />
-            <span className="font-sans font-light text-[16px] md:text-base lg:text-lg md:leading-relaxed space-y-1">
+            <span className="font-sans font-light text-[16px] md:text-base lg:text-lg md:leading-relaxed space-y-2">
               <PortableText value={fetchPost.freeContent} components={myPortableTextComponents}/>
             </span>
           </div>
