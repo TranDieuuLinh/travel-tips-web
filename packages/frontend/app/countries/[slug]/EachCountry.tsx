@@ -4,7 +4,6 @@ import { Country } from "../../../sanity/ImportSanCountry";
 import Image from "next/image";
 import { urlFor } from "@/sanity/urlFor";
 import { Post } from "@/sanity/ImportSanPost";
-import { PortableText } from "next-sanity";
 import Link from "next/link";
 
 type Props = {
@@ -72,7 +71,7 @@ const EachCountry = ({ countries, posts, slug }: Props) => {
                         {p.postTitle.toUpperCase()}
                       </h1>
                       <div className="font-sans font-extralight text-sm lg:text-base">
-                        <PortableText value={p.previewContent} />
+                        {p.previewContent}
                       </div>
                     </div>
                   </div>

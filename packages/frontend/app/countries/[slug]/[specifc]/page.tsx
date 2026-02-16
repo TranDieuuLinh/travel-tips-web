@@ -1,5 +1,21 @@
 import { ImportSanPost } from "@/sanity/ImportSanPost";
 import MainCountry from "./MainCountry";
+import type { Metadata } from 'next'
+
+
+export async function generateMetadata(
+  { params }: Props,
+): Promise<Metadata> {
+
+  const { specifc } = await params;
+  const posts = await ImportSanPost(specifc.trim().toLowerCase());
+  const fetchPost = posts[0]; 
+
+  return {
+    title: fetchPost.postTitle,
+    description:  fetchPost.previewContent
+  }
+}
 
 type Props = {
   params: {

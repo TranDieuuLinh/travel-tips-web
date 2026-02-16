@@ -11,6 +11,7 @@ import { PiShoppingCartDuotone } from "react-icons/pi";
 config({ quiet: true });
 import { useSearchParams } from "next/navigation";
 
+
 type Props = {
   countries: Country[];
 };

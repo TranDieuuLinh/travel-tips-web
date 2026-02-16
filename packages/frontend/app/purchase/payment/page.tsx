@@ -2,6 +2,13 @@
 import React, { useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import type { Metadata } from 'next'
+
+
+export const metadata:Metadata = {
+  title:'Redirecting...',
+  description:'Redirecting to payment'
+}
 
 const Page = () => {
   const searchQuery = useSearchParams();

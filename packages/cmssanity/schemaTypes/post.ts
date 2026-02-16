@@ -25,8 +25,7 @@ export const post = defineType({
         defineField({
             name: 'previewContent',
             title: 'Preview Content',
-            type: 'array',
-            of: [{ type: 'block' }],
+            type: 'string'
           }),
         defineField({
             name: 'freeContent',

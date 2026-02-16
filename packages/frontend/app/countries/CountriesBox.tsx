@@ -86,7 +86,7 @@ const CountriesBox = ({ countries }: Props) => {
   return (
     <div className="flex flex-col justify-center w-screen min-h-screen items-center pt-24">
       <div className="relative z-10 items-center">
-        <h2 className="font-serif text-center text-[#6D2608] font-bold text-xl md:text-2xl lg:text-3xl pb-2">
+        <h2 className="font-serif text-center text-[#6D2608] font-bold text-xl md:text-3xl lg:text-4xl pb-2">
           COUNTRIES
         </h2>
         {userId > 0 && (

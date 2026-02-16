@@ -1,5 +1,12 @@
 import CountriesBox from "./CountriesBox";
 import { ImportSanCountry } from "@/sanity/ImportSanCountry";
+import type { Metadata } from 'next'
+
+
+export const metadata:Metadata = {
+  title:'All Countries Tips',
+  description:'Check Out All The Countries Tips We Have'
+}
 
 export const revalidate = 300;
 

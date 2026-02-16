@@ -12,7 +12,7 @@ export type Post = {
   content: PortableTextBlock[];
   freeContent: PortableTextBlock[];
   highlightImage: SanityImageSource;
-  previewContent: PortableTextBlock[];
+  previewContent: string;
 };
 
 export const myPortableTextComponents: Partial<PortableTextReactComponents> = {
