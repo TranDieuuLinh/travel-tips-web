@@ -34,7 +34,7 @@ const Highlight = ({ posts }: Props) => {
               height={400}
               className="w-38 sm:w-50 md:w-70 lg:w-100 mr-2 md:mr-4 md:mb-4  object-cover float-left"
             />
-            <span className="font-sans font-light text-[16px] md:text-base lg:text-lg md:leading-relaxed">
+            <span className="font-sans font-light text-[16px] md:text-base lg:text-lg md:leading-relaxed space-y-1">
               <PortableText value={fetchPost.freeContent} components={myPortableTextComponents}/>
             </span>
           </div>
