@@ -14,6 +14,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Travel With Knowledge",
+  description:
+    "Through our website, we share practical tips and personal insights to help you travel smarter, connect deeper, and experience more than just a holiday.",
   icons: [
     { url: "/icon.png", sizes: "32x32", type: "image/png" },
     { url: "/icon.png", sizes: "64x64", type: "image/png" },
