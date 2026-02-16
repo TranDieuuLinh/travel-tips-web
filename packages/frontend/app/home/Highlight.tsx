@@ -13,7 +13,7 @@ const Highlight = ({ posts }: Props) => {
   const fetchPost = posts[0];
 
   return (
-    <div className="mx-auto max-w-[1600px]  w-full px-4 sm:px-6 md:px-12 lg:px-80 py-8">
+    <div className="mx-auto max-w-4xl w-full px-4 py-8">
       <h1 className="font-sans text-[10px] sm:text-base md:text-lg font-semibold md:mb-2">
         HIGHLIGHT POST
       </h1>
