@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       images: [
         {
-          url: "https://travelknowled.ge/SignInBg.png",
+          url: countryImage,
           width: 1200,
           height: 630,
           alt: countries[0].countryName,

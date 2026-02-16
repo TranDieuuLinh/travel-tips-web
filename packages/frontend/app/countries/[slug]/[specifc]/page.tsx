@@ -7,7 +7,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { specifc } = await params;
   const posts = await ImportSanPost(specifc.trim().toLowerCase());
   const fetchPost = posts[0];
-  const images = urlFor(fetchPost.highlightImage).width(1200).height(630).url();
+  const images = fetchPost.highlightImage
+    ? urlFor(fetchPost.highlightImage).url()
+    : "https://travelknowled.ge/SignInBg.png";
 
   return {
     title: fetchPost.postTitle,
