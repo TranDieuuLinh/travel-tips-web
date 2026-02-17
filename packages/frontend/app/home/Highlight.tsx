@@ -21,9 +21,9 @@ const Highlight = ({ posts }: Props) => {
       {fetchPost && (
         <div className="w-full">
           <Link href={`/countries/china/${fetchPost.slug}`}>
-          <h2 className="font-serif text-[#6D2608] font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl mb-6">
-            {fetchPost.postTitle.toUpperCase()}
-          </h2>
+            <h2 className="font-serif text-[#6D2608] font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl mb-6">
+              {fetchPost.postTitle.toUpperCase()}
+            </h2>
           </Link>
 
           <div>
@@ -34,8 +34,15 @@ const Highlight = ({ posts }: Props) => {
               height={400}
               className="w-38 sm:w-50 md:w-70 lg:w-90 mr-2 md:mr-4 md:mb-4  object-cover float-left"
             />
-            <span className="font-sans font-light text-[16px] md:text-base lg:text-lg md:leading-relaxed space-y-2">
-              <PortableText value={fetchPost.freeContent} components={myPortableTextComponents}/>
+            <div className="py-2 text-base font-sans">
+              {fetchPost.previewContent}
+            </div>
+
+            <span className="font-sans font-light md:leading-relaxed space-y-2">
+              <PortableText
+                value={fetchPost.freeContent}
+                components={myPortableTextComponents}
+              />
             </span>
           </div>
         </div>
