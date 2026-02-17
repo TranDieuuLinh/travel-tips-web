@@ -79,7 +79,8 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
           </h2>
 
           {/* Free Content */}
-          <div className="font-sans tracking-normal text-base md:text-lg lg:text-xl text-left">
+          <div className="font-sans tracking-normal text-base text-left">
+            <div className="py-2">{fetchPost.previewContent}</div>
             <PortableText
               value={fetchPost.freeContent}
               components={myPortableTextComponents}
