@@ -24,7 +24,7 @@ const Hero = ({ countries }: Props) => {
       />
 
       <div className="absolute inset-0 flex flex-col pb-60 xl:pb-40 sm:pb-0 items-center justify-center space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6 xl:space-y-8 text-[#6D2608] font-serif font-extrabold sm:font-semibold text-[21px] sm:text-2xl md:text-3xl lg:text-5xl  px-4 text-center ">
-        <h1 className="tracking-widest first-letter:text-4xl sm:first-letter:text-3xl md:first-letter:text-4xl lg:first-letter:text-7xl  first-letter:font-medium">
+        <h1 className="tracking-widest first-letter:text-4xl sm:first-letter:text-3xl md:first-letter:text-4xl lg:first-letter:text-8xl  first-letter:font-medium">
           FOLLOW OUR TIPS
         </h1>
         <h1 className="tracking-widest">
