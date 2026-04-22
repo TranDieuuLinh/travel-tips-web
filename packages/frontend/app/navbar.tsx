@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
-  const [name, setName] = useState("");
   const [dropdownMenu, setDropdownMenu] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
-  const [loading, setLoading] = useState(true);
-
+  const {data: authUser, isLoading: isAuthLoading} = useAuth();
+  const name = authUser?.name.trim()?? "";
   const dropdownMenuRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
@@ -36,38 +36,6 @@ const Navbar = () => {
     return () => {
       window.removeEventListener("click", clickOutside);
     };
-  }, []);
-
-  /* Fetch user */
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/login/me`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-
-        if (!response.ok) {
-          setLoading(false);
-          return;
-        }
-
-        const data = await response.json();
-
-        if (data.name) {
-          setName(data.name.trim());
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
   }, []);
 
   return (
@@ -132,7 +100,7 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-          ) : loading ? (
+          ) : isAuthLoading ? (
             <span className="animate-spin">🌀</span>
           ) : (
             <Link

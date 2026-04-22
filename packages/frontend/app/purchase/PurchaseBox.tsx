@@ -10,32 +10,28 @@ import { PiSignInFill } from "react-icons/pi";
 import { PiShoppingCartDuotone } from "react-icons/pi";
 config({ quiet: true });
 import { useSearchParams } from "next/navigation";
-
+import { useAuth } from "@/hooks/useAuth";
+import { usePaidCountries } from "@/hooks/usePaidCountries";
+import { useCart } from "@/hooks/useCart";
 
 type Props = {
   countries: Country[];
 };
 
-interface DataFetcher<T> {
-  data: T;
-  loaded: boolean;
-}
-
 const PurchaseBox = ({ countries }: Props) => {
-  const [inBasketData, setInBasketData] = useState<DataFetcher<string[]>>({
-    data: [],
-    loaded: false,
-  });
   const [countriesDrpDwnList, setCountriesDrpDwnList] = useState<string[]>([]);
   const [dropDown, setDropDown] = useState(false);
   const dropdownMenuRef = React.useRef<HTMLDivElement>(null);
-  const [userId, setuserId] = useState(0);
-  const [email, setemail] = useState("");
+  const {data:authUser} = useAuth();
+  const userId = authUser?.id?? 0;
+  const email = authUser?.email?? "";
+  const {data: paidcountries = []} = usePaidCountries();
   const router = useRouter();
-  const [paidcountries, setpaidcountries] = useState<string[]>([]);
   const useparams = useSearchParams();
   const countryslug = useparams.get("countryslug");
   const [autoAddSlug, setAutoAddSlug] = useState<string | null>(countryslug);
+  const { cartItems, cartLoading, addToCart, deleteFromCart } = useCart();
+
 
   const clickOutside = (e: MouseEvent) => {
     if (
@@ -52,64 +48,16 @@ const PurchaseBox = ({ countries }: Props) => {
   }, []);
 
   useEffect(() => {
-    const checklogin = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/login/me`,
-          {
-            credentials: "include",
-          }
-        );
-        if (!response.ok) return;
-        const result = await response.json();
-        if (!result.id || !result.email) return;
-        setuserId(result.id);
-        setemail(result.email);
-
-        const paidcountryRes = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname`,
-          {
-            credentials: "include",
-          }
-        );
-        if (!paidcountryRes.ok) return;
-        const paidcountrydata = await paidcountryRes.json();
-        setpaidcountries(paidcountrydata.paidcountries);
-
-        const cartRes = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`,
-          {
-            credentials: "include",
-          }
-        );
-
-        const cartData: { cart?: { cart_country_name: string }[] } =
-          await cartRes.json();
-
-        const cart = cartData.cart || [];
-        setInBasketData({
-          data: cart.map((c) => c.cart_country_name),
-          loaded: true,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    checklogin();
-  }, []);
-
-  useEffect(() => {
     if (!countries.length) return;
     const filtered = countries
       .filter(
         (p) =>
-          !inBasketData.data.includes(p.countryName) &&
-          !paidcountries.includes(p.countryName.toLowerCase())
+          !cartItems.includes(p.slug) &&
+          !paidcountries.includes(p.slug)
       )
-      .map((e) => e.countryName);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+      .map((e) => e.slug);
     setCountriesDrpDwnList(filtered);
-  }, [countries, inBasketData, paidcountries]);
+  }, [countries, cartItems, paidcountries]);
 
   const checkLogin = () => {
     return router.push("/signin");
@@ -120,25 +68,11 @@ const PurchaseBox = ({ countries }: Props) => {
     fetchCountryMainPsot();
   }, []);
 
-  const handleSelect = async (country: string) => {
+  const handleSelect = async (countrySlug: string) => {
     if (userId === 0) return router.push("/signin");
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`,
-        {
-          method: "POST",
-          headers: {"Content-type":"application/json"},
-          credentials: "include",
-          body: JSON.stringify({
-            cart_slug: country.trim().toLowerCase(),
-            cart_country_name: country
-          }),
-        }
-      );
-      if (!response.ok) return alert("Failed to add cart");
-
-      setInBasketData((prev) => ({ ...prev, data: [...prev.data, country] }));
-      setCountriesDrpDwnList((prev) => prev.filter((p) => p !== country));
+      await addToCart(countrySlug);
+      setCountriesDrpDwnList((prev) => prev.filter((p) => p !== countrySlug));
       setDropDown(false);
     } catch (error) {
       console.error(error);
@@ -146,57 +80,38 @@ const PurchaseBox = ({ countries }: Props) => {
   };
 
   useEffect(() => {
-    const importBuyName = async () => {
-      if (!autoAddSlug || userId === 0 || !inBasketData.loaded) return;
-
-      const capitalize = autoAddSlug.replace(
-        /\b\w+/g,
-        (w) => w[0].toUpperCase() + w.slice(1).toLowerCase()
-      );
-
-      // prevent double insert
-      console.log(capitalize, inBasketData);
-      if (inBasketData.data.includes(capitalize)) return;
-      setAutoAddSlug("");
-      await handleSelect(capitalize);
+    const importBuySlug = async () => {
+      if (!autoAddSlug || userId === 0 || cartLoading) return;
+      const slug = autoAddSlug.trim().toLowerCase();
+      if (cartItems.includes(slug)) return;
+      setAutoAddSlug(null);
+      await handleSelect(slug);
     };
-    importBuyName();
-  }, [autoAddSlug, userId, inBasketData]);
+    importBuySlug();
+  }, [autoAddSlug, userId, cartLoading, cartItems]);
 
-  const handleDelete = async (country: string) => {
+  const handleDelete = async (countrySlug: string) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`,
-        {
-          method: "DELETE",
-          headers: {"Content-type":"application/json"},
-          credentials: "include",
-          body: JSON.stringify({    
-            cart_slug: country.trim().toLowerCase(),
-          }),
-        }
+      await deleteFromCart(countrySlug);
+      setCountriesDrpDwnList((prev) =>
+        prev.includes(countrySlug) ? prev : [...prev, countrySlug]
       );
-      if (!response.ok) return alert("Failed to delete cart");
-
-      setInBasketData((prev) => ({
-        ...prev,
-        data: prev.data.filter((p) => p !== country),
-      }));
-      setCountriesDrpDwnList((prev) => [...prev, country]);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const filtered = countries.filter((p) =>
-    inBasketData.data.includes(p.countryName)
-  );
+  const nameBySlug = React.useMemo(() => {
+    return new Map(countries.map((c) => [c.slug, c.countryName]));
+  }, [countries]);
+
+  const filtered = countries.filter((p) => cartItems.includes(p.slug));
 
   const processCheckout = () => {
     const params = new URLSearchParams({
-      country_slug: inBasketData.data.map((p) => p.toLowerCase()).join(","),
+      country_slug: cartItems.join(","),
       user_id: userId.toString(),
-      quantity: inBasketData.data.length.toString(),
+      quantity: cartItems.length.toString(),
       email: email,
     });
 
@@ -237,7 +152,7 @@ const PurchaseBox = ({ countries }: Props) => {
                 onClick={() => handleSelect(p)}
                 className="px-3 py-2 hover:bg-red-100 cursor-pointer text-sm "
               >
-                {p}
+                {nameBySlug.get(p) ?? p}
               </p>
             ))}
         </div>
@@ -246,7 +161,7 @@ const PurchaseBox = ({ countries }: Props) => {
       {/* Cart Box */}
       <div className="flex justify-center w-full mt-8 md:px-6">
         <div className="w-full max-w-3xl p-4 sm:p-6 md:p-8 shadow sm:shadow-xl bg-white rounded-2xl space-y-3">
-          {inBasketData.data.length === 0 && email && (
+          {cartItems.length === 0 && email && (
             <div className="justify-center w-full flex flex-col items-center text-base sm:text-base font-extralight space-y-2 py-6">
               <PiShoppingCartDuotone className="text-[#6D2608]" size={40} />
               <span>Your Cart Is Empty </span>
@@ -275,7 +190,7 @@ const PurchaseBox = ({ countries }: Props) => {
               <div className="text-right flex-1 space-y-1 md:text-base text-xs">
                 <button>
                   <RiDeleteBin5Fill
-                    onClick={() => handleDelete(e.countryName)}
+                    onClick={() => handleDelete(e.slug)}
                     className="text-red-600"
                   />
                 </button>
@@ -288,14 +203,14 @@ const PurchaseBox = ({ countries }: Props) => {
           <hr className="my-3" />
 
           <div className="flex justify-between font-extralight text-xs sm:text-sm px-2">
-            Subtotal: <span>$AUD {2 * inBasketData.data.length}</span>
+            Subtotal: <span>$AUD {2 * cartItems.length}</span>
           </div>
 
           <div className="flex justify-center mt-3">
             {email ? (
               <button
                 className="bg-[#6D2608] px-10 sm:px-16 py-2 text-sm sm:text-base text-white rounded-lg"
-                disabled={inBasketData.data.length <= 0}
+                disabled={cartItems.length <= 0}
                 onClick={processCheckout}
               >
                 Next

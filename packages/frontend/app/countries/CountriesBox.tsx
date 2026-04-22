@@ -8,18 +8,21 @@ import React from "react";
 import { MdVerified } from "react-icons/md";
 import { config } from "dotenv";
 config({ quiet: true });
+import { useAuth } from "@/hooks/useAuth";
+import { usePaidCountries } from "@/hooks/usePaidCountries";
 
 type Props = {
   countries: Country[];
 };
 
 const CountriesBox = ({ countries }: Props) => {
-  const [paidcountries, setpaidcountries] = useState<string[]>([]);
+  const { data: paidcountries = [] } = usePaidCountries();
   const [dropDown, setDropDown] = useState(false);
   const dropdownMenuRef = React.useRef<HTMLDivElement>(null);
   const countriesDrpDwnList = ["Country Name", "Paid Countries"];
   const [drpdwnType, setdrpdwntype] = useState<"name" | "paid">("name");
-  const [userId, setUserId] = useState(0);
+  const {data: authUser} = useAuth();
+  const userId = authUser?.id?? 0;
 
   const clickOutside = (e: MouseEvent) => {
     if (
@@ -53,36 +56,6 @@ const CountriesBox = ({ countries }: Props) => {
   useEffect(() => {
     window.addEventListener("click", clickOutside);
     return () => window.removeEventListener("click", clickOutside);
-  }, []);
-
-  useEffect(() => {
-    const checklogin = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/login/me`,
-          {
-            credentials: "include",
-          }
-        );
-        if (!response.ok) return;
-        const result = await response.json();
-        if (!result.id || !result.email) return;
-
-        const paidcountryRes = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname`,
-          {
-            credentials: "include",
-          } 
-        );
-        setUserId(result.id);
-        if (!paidcountryRes.ok) return;
-        const paidcountrydata = await paidcountryRes.json();
-        setpaidcountries(paidcountrydata.paidcountries);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    checklogin();
   }, []);
 
   return (

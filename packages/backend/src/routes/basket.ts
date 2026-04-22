@@ -9,7 +9,10 @@ router.get('/cart', authmiddleware, async (req, res) => {
 
   try {
 
-    const cartResult = await pool.query(`SELECT cart_slug, cart_country_name FROM cart WHERE user_id = $1`,[userId]);
+    const cartResult = await pool.query(
+      `SELECT cart_slug FROM cart WHERE user_id = $1`,
+      [userId]
+    );
 
     return res.status(200).json({ cart: cartResult.rows });
   } catch (error) {
@@ -20,15 +23,20 @@ router.get('/cart', authmiddleware, async (req, res) => {
 
 router.post('/cart', authmiddleware, async (req, res) => {
     const userId = req.user!.userId;
-    const { cart_slug, cart_country_name } = req.body;
-    if (!cart_slug || !cart_country_name) {
+    const { cart_slug } = req.body;
+    if (!cart_slug) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
   
     try {
       const now = Date.now();
     
-      await pool.query(`INSERT INTO cart (cart_slug, cart_country_name, user_id, cart_edit_time) VALUES ($1, $2, $3, $4)`, [cart_slug, cart_country_name, userId, now]);
+      // Note: we keep `cart_country_name` column for backwards compatibility,
+      // but the canonical identifier is `cart_slug`.
+      await pool.query(
+        `INSERT INTO cart (cart_slug, cart_country_name, user_id, cart_edit_time) VALUES ($1, $2, $3, $4)`,
+        [cart_slug, cart_slug, userId, now]
+      );
       return res.status(200).json({ message: 'Cart saved successfully' });
     } catch (error) {
       console.error('Error saving cart:', error);

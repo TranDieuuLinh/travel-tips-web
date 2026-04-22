@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import Image from "next/image";
 import NextTopLoader from "nextjs-toploader";
+import Providers from "./Providers";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -32,6 +33,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <NextTopLoader color="#6D2608" height={4} />
+        <Providers>
         <Navbar />
         <Suspense
           fallback={
@@ -54,6 +56,7 @@ export default function RootLayout({
         >
           {children}
         </Suspense>
+        </Providers>
       </body>
     </html>
   );

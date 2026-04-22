@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { config } from "dotenv";
 config({ quiet: true });
+import { useAuth } from "@/hooks/useAuth";
 
 type Props = {
   countrySlug: string;
@@ -16,7 +17,8 @@ type Props = {
 const MainCountry = ({ countrySlug, posts }: Props) => {
   const fetchPost = posts[0];
   const [paid, setpaid] = useState(false);
-  const [userId, setUserId] = useState(0);
+  const {data:authUser} = useAuth();
+  const userId = authUser?.id?? 0;
   const router = useRouter();
   const movetoPayment = () => {
     const countryslug = encodeURIComponent(countrySlug);
@@ -29,19 +31,8 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
 
   useEffect(() => {
     const checklogin = async () => {
+      if (userId === 0) return;
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/login/me`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-        if (!response.ok) return;
-        const result = await response.json();
-        if (!result.id || !result.email) return;
-
-        setUserId(result.id);
 
         const paidcountryRes = await fetch(
           `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname`,
@@ -59,7 +50,7 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
       }
     };
     checklogin();
-  }, [countrySlug]);
+  }, [countrySlug, userId]);
 
   return (
     <>
