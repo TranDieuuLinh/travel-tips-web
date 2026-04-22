@@ -1,6 +1,6 @@
 import express from 'express';
 import { pool } from '../database/index.ts';
-import { authmiddleware } from '../middleware/authmiddleware.ts';
+import { authmiddleware } from '../middleware/authMiddleware.ts';
 
 const router = express.Router();
 
