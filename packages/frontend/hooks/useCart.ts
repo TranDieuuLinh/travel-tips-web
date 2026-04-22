@@ -49,19 +49,14 @@ async function addToCart(countrySlug: string) {
     });
     const addMutation = useMutation({
       mutationFn: addToCart,
-      onSuccess: async (_, countrySlug) => {
-        // simple + reliable: refetch
+      onSuccess: async () => {
         await qc.invalidateQueries({ queryKey: ["cart", userId] });
-        // (optional) optimistic update instead of refetch:
-        // qc.setQueryData<string[]>(["cart", userId], (old = []) => [...old, countrySlug]);
       },
     });
     const deleteMutation = useMutation({
       mutationFn: deleteFromCart,
-      onSuccess: async (_, countrySlug) => {
+      onSuccess: async () => {
         await qc.invalidateQueries({ queryKey: ["cart", userId] });
-        // (optional) optimistic:
-        // qc.setQueryData<string[]>(["cart", userId], (old = []) => old.filter((x) => x !== countrySlug));
       },
     });
     return {
