@@ -1,15 +1,15 @@
 import express from 'express';
 import { pool } from '../database/index.ts';
+import { authmiddleware } from '../middleware/authmiddleware.ts';
 
 const router = express.Router();
 
-router.get('/cart', async (req, res) => {
-  const { userid } = req.query;
-  if (!userid) return res.status(400).json({ message: 'Invalid User' });
+router.get('/cart', authmiddleware, async (req, res) => {
+  const userId = req.user!.userId;
 
   try {
 
-    const cartResult = await pool.query(`SELECT cart_slug, cart_country_name FROM cart WHERE user_id = $1`,[userid]);
+    const cartResult = await pool.query(`SELECT cart_slug, cart_country_name FROM cart WHERE user_id = $1`,[userId]);
 
     return res.status(200).json({ cart: cartResult.rows });
   } catch (error) {
@@ -18,9 +18,10 @@ router.get('/cart', async (req, res) => {
   }
 });
 
-router.post('/cart', async (req, res) => {
-    const { userId, cart_slug, cart_country_name } = req.body;
-    if (!userId || !cart_slug || !cart_country_name) {
+router.post('/cart', authmiddleware, async (req, res) => {
+    const userId = req.user!.userId;
+    const { cart_slug, cart_country_name } = req.body;
+    if (!cart_slug || !cart_country_name) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
   
@@ -35,9 +36,10 @@ router.post('/cart', async (req, res) => {
     }
   });
 
-router.delete('/cart', async (req, res) => {
-    const { userId, cart_slug } = req.body;
-    if (!userId || !cart_slug) return res.status(400).json({ message: 'Missing required fields' });
+router.delete('/cart', authmiddleware, async (req, res) => {
+    const userId = req.user!.userId;
+    const { cart_slug } = req.body;
+    if (!cart_slug) return res.status(400).json({ message: 'Missing required fields' });
   
     try {
       const deleteResult = await pool.query(`DELETE FROM cart WHERE cart_slug = $1 AND user_id = $2`,[cart_slug, userId]);

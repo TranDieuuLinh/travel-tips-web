@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [dropdownMenu, setDropdownMenu] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -58,9 +57,8 @@ const Navbar = () => {
 
         const data = await response.json();
 
-        if (data.name && data.email) {
+        if (data.name) {
           setName(data.name.trim());
-          setEmail(data.email);
         }
       } catch (error) {
         console.error(error);
@@ -117,10 +115,7 @@ const Navbar = () => {
               {dropdownMenu && (
                 <div className="absolute right-0 mt-3 bg-neutral-200 rounded p-3 w-32 flex flex-col space-y-3 text-sm">
                   <Link
-                    href={{
-                      pathname: "/signin/editname",
-                      query: { email },
-                    }}
+                    href="/signin/editname"
                     className="text-gray-600"
                     onClick={() => setDropdownMenu(false)}
                   >
@@ -182,10 +177,7 @@ const Navbar = () => {
             {name ? (
               <>
                 <Link
-                  href={{
-                    pathname: "/signin/editname",
-                    query: { email },
-                  }}
+                  href="/signin/editname"
                   onClick={() => setMobileMenu(false)}
                 >
                   EDIT NAME

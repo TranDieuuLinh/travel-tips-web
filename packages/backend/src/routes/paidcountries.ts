@@ -1,15 +1,14 @@
 import express from 'express';
 import { pool } from '../database/index.ts';
+import { authmiddleware } from '../middleware/authmiddleware.ts';
 
 const router = express.Router();
 
-router.get('/paidcountryname', async (req, res) => {
-    const { userid } = req.query;
-  
-    if (!userid) return res.status(400).json({ error: "user_id is required" });
+router.get('/paidcountryname', authmiddleware, async (req, res) => {
+    const userId = req.user!.userId;
   
     try {
-      const result = await pool.query( `SELECT paid_country_slug FROM paid_country WHERE user_id = $1`,[userid]);
+      const result = await pool.query( `SELECT paid_country_slug FROM paid_country WHERE user_id = $1`,[userId]);
   
       if (result.rows.length === 0) {
         return res.status(200).json({ paidcountries: [] });

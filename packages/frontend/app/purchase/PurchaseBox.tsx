@@ -57,7 +57,6 @@ const PurchaseBox = ({ countries }: Props) => {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_APP_URL}/login/me`,
           {
-            method: "GET",
             credentials: "include",
           }
         );
@@ -68,14 +67,20 @@ const PurchaseBox = ({ countries }: Props) => {
         setemail(result.email);
 
         const paidcountryRes = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
+          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname`,
+          {
+            credentials: "include",
+          }
         );
         if (!paidcountryRes.ok) return;
         const paidcountrydata = await paidcountryRes.json();
         setpaidcountries(paidcountrydata.paidcountries);
 
         const cartRes = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart?userid=${encodeURIComponent(result.id)}`
+          `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`,
+          {
+            credentials: "include",
+          }
         );
 
         const cartData: { cart?: { cart_country_name: string }[] } =
@@ -122,11 +127,11 @@ const PurchaseBox = ({ countries }: Props) => {
         `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {"Content-type":"application/json"},
+          credentials: "include",
           body: JSON.stringify({
-            userId: userId,
             cart_slug: country.trim().toLowerCase(),
-            cart_country_name: country,
+            cart_country_name: country
           }),
         }
       );
@@ -164,9 +169,9 @@ const PurchaseBox = ({ countries }: Props) => {
         `${process.env.NEXT_PUBLIC_APP_URL}/basket/cart`,
         {
           method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId: userId,
+          headers: {"Content-type":"application/json"},
+          credentials: "include",
+          body: JSON.stringify({    
             cart_slug: country.trim().toLowerCase(),
           }),
         }

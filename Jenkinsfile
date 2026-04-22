@@ -29,7 +29,6 @@ pipeline {
                 )]) {
                     dir('/home/dieulinh/apps/travel-tips-web') {
 
-                        // Update repo
                         sh '''
                         git remote set-url origin https://$GIT_USERNAME:$GIT_PASSWORD@github.com/TranDieuuLinh/travel-tips-web.git
                         git fetch --all
@@ -50,11 +49,9 @@ pipeline {
                             '''
                         }
 
-                        // PM2 restart/start commands
                         sh '''
                         pm2 restart backend || pm2 start packages/backend/src/server.ts --name backend --interpreter ts-node
                         pm2 restart frontend || PORT=3001 HOST=0.0.0.0 pm2 start npm --name frontend -- start --prefix packages/frontend
-                        pm2 status
                         '''
                     }
                 }

@@ -2,13 +2,10 @@
 import React from "react";
 import { useState } from "react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 
 const EditNameBox = () => {
-  const searchParams = useSearchParams();
   const [newName, setNewName] = useState("");
   const [loading, setLoading] = useState(false);
-  const email = searchParams.get("email");
 
   const fetchEditName = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,11 +14,11 @@ const EditNameBox = () => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_URL}/login/update-name`,
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: "PATCH",
+          headers:{"Content-type":"application/json"},
+          credentials: "include",
           body: JSON.stringify({
-            newName: newName,
-            email: email,
+            newName: newName
           }),
         }
       );

@@ -81,26 +81,12 @@ app.use((req, res, next) => {
       }
     },
     credentials: true,
-    methods: ['GET','POST','UPDATE','DELETE']
+    methods: ['GET','POST','UPDATE','DELETE', 'PATCH']
   })(req, res, next);
 });
 
 
 app.use(express.json());
-
-app.post('/api/refund', async (req, res) => {
-  const { payment_intent_id } = req.body;
-  try {
-    await stripe.refunds.create({
-      payment_intent: payment_intent_id
-    });
-    await pool.query(`UPDATE paid_country SET status = $1 WHERE paid_country_payment_intent = $2`, ['refunded', payment_intent_id]);
-    return res.status(200).json({ message: 'Refund Successfully' })
-  } catch (error) {
-    console.error(error);
-    return res.status(400);
-  }
-});
 
 
 //stripe payment
@@ -154,18 +140,6 @@ app.use(`/api/login`,login);
 app.use(`/api/basket`,basket);
 
 app.use(`/api/paidcountries`,paidcountries)
-
-app.get(`/api/users`, async (req, res) => {
-  const user = await pool.query(`SELECT * from users`);
-  const token = await pool.query(`SELECT * from token`);
-  const paid = await pool.query(`SELECT * from paid_country`);
-  const cart = await pool.query(`SELECT * from cart`);
-  const userTable = user.rows;
-  const tokenTable = token.rows;
-  const paidTable = paid.rows;
-  const cartTable = cart.rows;
-  res.status(200).json({ "user": userTable, "token": tokenTable, "paid": paidTable, "cart":cartTable });
-});
 
 //logout user by clearing cookie
 app.post('/api/logout',(req,res) => {

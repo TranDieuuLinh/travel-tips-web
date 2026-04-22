@@ -9,7 +9,7 @@ import { urlFor } from "./urlFor";
 export type Post = {
   postTitle: string;
   slug: string;
-  content: PortableTextBlock[];
+  content?: PortableTextBlock[];
   freeContent: PortableTextBlock[];
   highlightImage: SanityImageSource;
   previewContent: string;
@@ -68,10 +68,10 @@ export const myPortableTextComponents: Partial<PortableTextReactComponents> = {
     image: ({ value }) => (
       <div className="flex justify-center my-4" >
         <Image
-          src={urlFor(value).quality(100).url()}
+          src={urlFor(value).quality(75).url()}
           width={500}
           height={500}
-          style={{ width: "500", height: "500" }}
+          style={{ width: "500px", height: "500px" }}
           alt=""
         />
       </div>

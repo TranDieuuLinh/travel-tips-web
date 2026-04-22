@@ -61,7 +61,6 @@ const CountriesBox = ({ countries }: Props) => {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_APP_URL}/login/me`,
           {
-            method: "GET",
             credentials: "include",
           }
         );
@@ -70,7 +69,10 @@ const CountriesBox = ({ countries }: Props) => {
         if (!result.id || !result.email) return;
 
         const paidcountryRes = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
+          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname`,
+          {
+            credentials: "include",
+          } 
         );
         setUserId(result.id);
         if (!paidcountryRes.ok) return;

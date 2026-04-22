@@ -44,7 +44,10 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
         setUserId(result.id);
 
         const paidcountryRes = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname?userid=${encodeURIComponent(result.id)}`
+          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname`,
+          {
+            credentials: "include",
+          }
         );
         if (!paidcountryRes.ok) return;
         const paidcountrydata = await paidcountryRes.json();
@@ -91,7 +94,7 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
           {paid && (
             <div className="font-sans tracking-normal text-base md:text-lg lg:text-xl text-left pt-2">
               <PortableText
-                value={fetchPost.content}
+                value={fetchPost.content || []}
                 components={myPortableTextComponents}
               />
             </div>
