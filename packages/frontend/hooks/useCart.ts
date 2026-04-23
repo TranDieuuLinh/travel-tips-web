@@ -20,7 +20,6 @@ async function addToCart(countrySlug: string) {
       credentials: "include",
       body: JSON.stringify({
         cart_slug: countrySlug.trim().toLowerCase(),
-        cart_country_name: countrySlug.trim().toLowerCase(),
       }),
     });
     if (!res.ok) throw new Error("Failed to add cart");

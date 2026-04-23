@@ -43,6 +43,7 @@ export default function RootLayout({
                   src="/icon.png"
                   alt="Logo"
                   fill
+                  sizes="64px"
                   className="object-contain"
                 />
               </div>

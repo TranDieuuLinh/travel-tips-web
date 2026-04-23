@@ -42,16 +42,15 @@ const Navbar = () => {
     <nav className="fixed top-0 z-50 w-full bg-linear-to-b from-black/50 to-black/0 text-white font-sans">
       <div className="flex items-center justify-between px-3 sm:px-7 py-4 font-semibold">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-12 md:w-10 md:h-13 relative">
-            <Link href="/">
-              <Image
-                src="/icon.png"
-                alt="Logo"
-                fill
-                className="object-contain"
-              />
-            </Link>
-          </div>
+          <Link href="/" className="block w-8 h-12 md:w-10 md:h-13 relative">
+            <Image
+              src="/icon.png"
+              alt="Logo"
+              fill
+              sizes="(min-width: 768px) 40px, 32px"
+              className="object-contain"
+            />
+          </Link>
 
           <Link href="/" className="font-semibold text-sm lg:text-[17px]">
             TRAVEL WITH KNOWLEDGE

@@ -19,6 +19,8 @@ const fetchAuthUser = async (): Promise<AuthUser | null> => {
 export const useAuth = () => {
     return useQuery({
         queryKey: ["auth"],
-        queryFn: fetchAuthUser
+        queryFn: fetchAuthUser,
+        staleTime: 1000*60*5,
+        retry: false,
     })
 }

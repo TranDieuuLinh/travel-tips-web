@@ -2,24 +2,39 @@
 import React from "react";
 import { useState } from "react";
 import Image from "next/image";
+import { useAuth } from "@/hooks/useAuth";
+import { normalizeNameForCompare, sanitizeUserName } from "@/lib/userName";
 
 const EditNameBox = () => {
+  const { data: authUser } = useAuth();
+  const currentName = authUser?.name ?? "";
   const [newName, setNewName] = useState("");
   const [loading, setLoading] = useState(false);
 
   const fetchEditName = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const sanitized = sanitizeUserName(newName);
+    if (!sanitized) {
+      alert("Please enter a valid name.");
+      return;
+    }
+    if (
+      currentName &&
+      normalizeNameForCompare(currentName) === normalizeNameForCompare(sanitized)
+    ) {
+      alert("That name is the same as your current name.");
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_APP_URL}/login/update-name`,
         {
           method: "PATCH",
-          headers:{"Content-type":"application/json"},
+          headers: { "Content-type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({
-            newName: newName
-          }),
+          body: JSON.stringify({ newName: sanitized }),
         }
       );
 
@@ -27,8 +42,15 @@ const EditNameBox = () => {
         alert("New Name Is Set ✅");
         window.location.href = "/";
       } else {
-        alert("Fail to edit name ❌");
-        window.location.reload();
+        let msg = "Fail to edit name ❌";
+        try {
+          const data = (await response.json()) as { message?: string };
+          if (data?.message) msg = data.message;
+        } catch {
+          /* ignore */
+        }
+        alert(msg);
+        if (response.status !== 400) window.location.reload();
       }
     } catch (error) {
       console.error(error);

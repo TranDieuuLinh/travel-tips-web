@@ -10,6 +10,7 @@ import paidcountries from './routes/paidcountries.ts';
 import Stripe from 'stripe';
 import cors from 'cors';
 import { sendReceipt } from './controllers/mailer.ts';
+import { authmiddleware } from './middleware/authMiddleware.ts';
 
 const app = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -90,8 +91,9 @@ app.use(express.json());
 
 
 //stripe payment
-app.post('/api/create-checkout-session', async (req, res) => {
-  const { country_slug, user_id, quantity, email } = req.body;
+app.post('/api/create-checkout-session', authmiddleware, async (req, res) => {
+  const user_id = req.user!.userId;
+  const { country_slug, quantity, email } = req.body;
 
   const session = await stripe.checkout.sessions.create({
     customer_creation: 'always',
@@ -108,7 +110,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
       quantity: quantity,
     }],
     metadata: {
-      "user_id": user_id,
+      "user_id": String(user_id),
       "country_slug": JSON.stringify(country_slug),
       customer_email: JSON.stringify(email)
     },

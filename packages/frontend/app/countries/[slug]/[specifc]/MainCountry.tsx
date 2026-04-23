@@ -3,20 +3,17 @@ import { Post, myPortableTextComponents } from "@/sanity/ImportSanPost";
 import { urlFor } from "@/sanity/urlFor";
 import Image from "next/image";
 import { PortableText } from "next-sanity";
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { config } from "dotenv";
-config({ quiet: true });
 import { useAuth } from "@/hooks/useAuth";
 
 type Props = {
   countrySlug: string;
   posts: Post[];
+  paid: boolean;
 };
 
-const MainCountry = ({ countrySlug, posts }: Props) => {
+const MainCountry = ({ countrySlug, posts, paid }: Props) => {
   const fetchPost = posts[0];
-  const [paid, setpaid] = useState(false);
   const {data:authUser} = useAuth();
   const userId = authUser?.id?? 0;
   const router = useRouter();
@@ -28,29 +25,6 @@ const MainCountry = ({ countrySlug, posts }: Props) => {
 
     router.push(url);
   };
-
-  useEffect(() => {
-    const checklogin = async () => {
-      if (userId === 0) return;
-      try {
-
-        const paidcountryRes = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname`,
-          {
-            credentials: "include",
-          }
-        );
-        if (!paidcountryRes.ok) return;
-        const paidcountrydata = await paidcountryRes.json();
-        const paidcountries = paidcountrydata.paidcountries;
-        if (paidcountries.includes(countrySlug)) return setpaid(true);
-        else return setpaid(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    checklogin();
-  }, [countrySlug, userId]);
 
   return (
     <>

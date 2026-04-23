@@ -26,7 +26,13 @@ const Page = () => {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-50">
       <div className="w-16 h-16 relative mb-6">
-        <Image src="/icon.png" alt="Logo" fill className="object-contain" />
+        <Image
+          src="/icon.png"
+          alt="Logo"
+          fill
+          sizes="64px"
+          className="object-contain"
+        />
       </div>
 
       <div className="flex items-center space-x-3 text-gray-700 text-base sm:text-lg">

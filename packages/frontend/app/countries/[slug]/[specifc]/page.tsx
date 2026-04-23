@@ -2,6 +2,7 @@ import { ImportSanPost } from "@/sanity/ImportSanPost";
 import MainCountry from "./MainCountry";
 import type { Metadata } from "next";
 import { urlFor } from "@/sanity/urlFor";
+import { cookies } from "next/headers";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { specifc,slug } = await params;
@@ -35,14 +36,39 @@ type Props = {
     specifc: string;
   };
 };
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
+
+async function getIsPaidCountry(countrySlug: string): Promise<boolean> {
+  const cookieHeader = (await cookies()).toString();
+  if (!cookieHeader) return false;
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/paidcountries/paidcountryname`, {
+      headers: { cookie: cookieHeader },
+      cache: "no-store",
+    });
+    if (!res.ok) return false;
+    const data = (await res.json()) as { paidcountries?: string[] };
+    return (data.paidcountries ?? []).includes(countrySlug.trim().toLowerCase());
+  } catch {
+    return false;
+  }
+}
 
 const Page = async ({ params }: Props) => {
   const { slug, specifc } = await params;
   const posts = await ImportSanPost(specifc.trim().toLowerCase());
+  const paid = await getIsPaidCountry(slug);
+
+  const safePosts = paid
+    ? posts
+    : posts.map((p) => ({
+        ...p,
+        content: [],
+      }));
   return (
     <div>
-      <MainCountry countrySlug={slug as string} posts={posts} />
+      <MainCountry countrySlug={slug as string} posts={safePosts} paid={paid} />
     </div>
   );
 };
